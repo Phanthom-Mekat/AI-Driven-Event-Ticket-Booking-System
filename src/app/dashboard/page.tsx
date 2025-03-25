@@ -1,11 +1,3 @@
-
-
-const Dashboard = () => {
-    return (
-        <div>
-            Dashboard
-        </div>
-    );
-};
-
-export default Dashboard;
+export default function Dashboard() {
+  return <div className='bg-secondary'>hello world</div>;
+}
