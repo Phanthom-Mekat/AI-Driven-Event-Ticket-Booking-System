@@ -24,7 +24,7 @@ export default function Home() {
           <li className="tracking-[-.01em]">
           <Button>Click me</Button>
           <button className="bg-[var(--color-primary)]">Click me</button>
-          <button  className="btn">Click me</button>
+          <button  className="btn">Click meee</button>
           </li>
         </ol>
 
