@@ -4,7 +4,7 @@ import {BentoGrid, BentoGridItem} from "@/components/bento-grid"
 import {motion} from "motion/react"
 import Link from "next/link";
 
-export default function PopularEventCategories() {
+export default function PopularCategories() {
     return (
         <div className="py-12 px-4 md:px-6 lg:px-8">
             <div className="text-center mb-10">
