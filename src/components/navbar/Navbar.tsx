@@ -28,6 +28,7 @@ import {
   SheetTitle, 
   SheetTrigger 
 } from '@/components/ui/sheet';
+import { useSession } from 'next-auth/react';
 
 // Dummy NextAuth session structure
 // const session = {
@@ -38,9 +39,11 @@ import {
 //   },
 //   expires: '2024-12-31T23:59:59.999Z'
 // };
-const session = null
+
 
 const Navbar: React.FC = () => {
+  const { data: session } = useSession();
+console.log(session, "session data");
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
