@@ -1,4 +1,11 @@
 "use client";
+import {
+  FaCalendarAlt,
+  FaInfoCircle,
+  FaMapMarkerAlt,
+  FaTicketAlt,
+} from "react-icons/fa";
+
 import React, {
   useEffect,
   useRef,
@@ -242,60 +249,68 @@ export const Card = ({
         )}
       </AnimatePresence>
       <motion.button
-  layoutId={layout ? `card-${card.title}` : undefined}
-  onClick={handleOpen}
-  className="rounded-3xl bg-gray-100 dark:bg-neutral-900 h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10 shadow-xl transition-all duration-300 hover:scale-105 group"
->
-  {/* Dark gradient overlay */}
-  <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/70 via-transparent to-transparent z-20 pointer-events-none" />
-  
-  {/* Content Section */}
-  <div className="relative z-30 p-6 md:p-8 space-y-4 flex flex-col flex-grow">
-    <motion.p
-      layoutId={layout ? `category-${card.category}` : undefined}
-      className="text-white text-sm md:text-base font-medium font-sans text-left uppercase tracking-wide"
-    >
-      {card.category}
-    </motion.p>
+        layoutId={layout ? `card-${card.title}` : undefined}
+        onClick={handleOpen}
+        className="rounded-3xl bg-gray-100 dark:bg-neutral-900 h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10 shadow-xl transition-all duration-300 hover:scale-105 group"
+      >
+        {/* Dark gradient overlay */}
+        <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/80 via-black/60 to-transparent z-20 pointer-events-none" />
 
-    <motion.p
-      layoutId={layout ? `title-${card.title}` : undefined}
-      className="text-white text-2xl md:text-4xl font-semibold max-w-xs text-left font-sans mt-2"
-    >
-      {card.title}
-    </motion.p>
+        {/* Content Section */}
+        <div className="relative z-30 p-6 md:p-8 flex flex-col flex-grow">
+          <motion.p
+            layoutId={layout ? `category-${card.category}` : undefined}
+            className="text-white text-sm md:text-base font-medium font-sans text-left uppercase tracking-wide"
+          >
+            {card.category}
+          </motion.p>
 
-    {/* Empty space to push the date/location/description to the bottom */}
-    <div className="flex-grow" />
+          <motion.p
+            layoutId={layout ? `title-${card.title}` : undefined}
+            className="text-white text-2xl md:text-4xl font-semibold max-w-xs text-left font-sans mt-2"
+          >
+            {card.title}
+          </motion.p>
 
-    {/* Date, Location, Description Section */}
-    <div className="bg-black/60 rounded-xl p-4 mt-auto space-y-2">
-      <motion.p className="text-white text-sm md:text-base font-sans">
-        📅 <span className="font-semibold">{card.date}</span>
-      </motion.p>
-      <motion.p className="text-white text-sm md:text-base font-sans">
-        📍 <span className="font-semibold">{card.location}</span>
-      </motion.p>
-      <motion.p className="text-white text-sm md:text-base font-sans">
-        {card.description}
-      </motion.p>
-    </div>
+          <motion.p className="text-white text-left text-sm md:text-base font-sans flex mt-4">
+           {card.description}
+          </motion.p>
 
-    {/* Tickets Sold */}
-    <motion.p className="text-primary font-medium bg-[var(--color-primary)] py-4 text-sm md:text-base font-sans mt-2">
-      🎟️ {card.ticketsSold} Tickets Sold
-    </motion.p>
-  </div>
+          {/* Empty space to push the date/location section down */}
+          <div className="flex-grow" />
 
-  {/* Image Background */}
-  <BlurImage
-    src={card.src}
-    alt={card.title}
-    fill
-    className="object-cover absolute z-10 inset-0 transition-opacity duration-300 group-hover:opacity-80"
-  />
-</motion.button>
+          {/* Date, Location Section */}
+          <div className="bg-black/60 rounded-xl p-4 mt-auto space-y-2">
+            <motion.p className="text-white text-sm md:text-base font-sans flex items-center">
+              <FaCalendarAlt className="mr-2" />{" "}
+              <span className="font-semibold">{card.date}</span>
+            </motion.p>
+            <motion.p className="text-white text-sm md:text-base font-sans flex items-center">
+              <FaMapMarkerAlt className="mr-2" />{" "}
+              <span className="font-semibold">{card.location}</span>
+            </motion.p>
+          </div>
 
+          {/* Tickets Sold Section */}
+          <motion.p className="text-primary font-medium bg-[var(--color-primary)] py-4 px-6 text-sm md:text-base font-sans mt-4 rounded-xl flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <FaTicketAlt className="text-2xl" />
+              <span>{card.ticketsSold} Tickets Sold</span>
+            </div>
+            <span className="text-sm md:text-base font-semibold text-white">
+              🎟️
+            </span>
+          </motion.p>
+        </div>
+
+        {/* Image Background */}
+        <BlurImage
+          src={card.src}
+          alt={card.title}
+          fill
+          className="object-cover absolute z-10 inset-0 transition-opacity duration-300 group-hover:opacity-80"
+        />
+      </motion.button>
     </>
   );
 };
