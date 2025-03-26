@@ -4,6 +4,7 @@ import {
   ChartColumnIncreasing,
   CheckCheck,
   CheckCircle,
+  LayoutDashboard,
   Settings2,
   Ticket,
   User,
@@ -25,14 +26,19 @@ import { usePathname } from "next/navigation";
 const data = {
   adminNav: [
     {
-      title: "Revenue & Analytics",
-      url: "/dashboard",
-      icon: ChartColumnIncreasing,
+      title: "Create Event",
+      url: "/dashboard/create-event",
+      icon: CalendarClock,
     },
     {
       title: "Event Management",
       url: "/dashboard/event-management",
       icon: CalendarClock,
+    },
+    {
+      title: "Revenue & Analytics",
+      url: "/dashboard/analytics",
+      icon: ChartColumnIncreasing,
     },
     {
       title: "User Management",
@@ -100,6 +106,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className='gap-2'>
+            {/* dashboard route only */}
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                className='hover:text-[var(--color-primary)]'
+              >
+                <Link
+                  href='/dashboard'
+                  className={`${isActiveLink(
+                    "/dashboard"
+                  )} ont-medium text-[16px]`}
+                >
+                  <LayoutDashboard className='size-6' />
+                  <span>Dashboard</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             {isAdmin
               ? data.adminNav.map((item) => (
                   <SidebarMenuItem key={item.title}>
