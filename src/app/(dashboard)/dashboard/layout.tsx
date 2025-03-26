@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { AppSidebar } from "@/components/app-sidebar";
+import "@/app/globals.css";
 
 export default function RootLayout({
   children,
