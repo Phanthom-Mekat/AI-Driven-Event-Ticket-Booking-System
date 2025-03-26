@@ -1,7 +1,7 @@
 import React from "react";
 
-const RevenueAndAnalyticsPage = () => {
-  return <div>Revenue And Analytics Page</div>;
+const RevenueAnsAnalyticsPage = () => {
+  return <div>Dashboard home</div>;
 };
 
-export default RevenueAndAnalyticsPage;
+export default RevenueAnsAnalyticsPage;
