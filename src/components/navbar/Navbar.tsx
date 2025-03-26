@@ -50,7 +50,7 @@ console.log(session, "session data");
   // Navigation menu items
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/events', label: 'Events', icon: Calendar },
+    { href: '/all-event', label: 'Events', icon: Calendar },
     { href: '/categories', label: 'Categories', icon: Layers },
     { href: '/my-tickets', label: 'My Tickets', icon: Ticket }
   ];
