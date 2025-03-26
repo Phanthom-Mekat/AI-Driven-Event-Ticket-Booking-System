@@ -19,7 +19,7 @@ import Link from "next/link";
 import { AppSidebar } from "@/components/app-sidebar";
 import "@/app/globals.css";
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -32,8 +32,6 @@ export default function RootLayout({
   }, [pathname]);
 
   return (
-    <html lang='en'>
-      <body>
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
@@ -86,7 +84,5 @@ export default function RootLayout({
             <main>{children}</main>
           </SidebarInset>
         </SidebarProvider>
-      </body>
-    </html>
   );
 }
