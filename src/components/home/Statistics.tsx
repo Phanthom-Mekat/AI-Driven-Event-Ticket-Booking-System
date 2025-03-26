@@ -18,7 +18,6 @@ const Statistics = () => {
                 Get insights into our growing community and event engagement.
                 </p>
             </div>
-            
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 {stats.map((stat, index) => (
                     <div key={index} className="bg-white dark:bg-neutral-800 shadow-lg rounded-xl p-6 flex items-center space-x-4">
