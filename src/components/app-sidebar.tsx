@@ -4,7 +4,6 @@ import {
   ChartColumnIncreasing,
   CheckCheck,
   CheckCircle,
-  GalleryVerticalEnd,
   Settings2,
   Ticket,
   User,
@@ -20,6 +19,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // This is sample sidebar nav data.
 const data = {
@@ -71,7 +71,15 @@ const data = {
   ],
 };
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
   const isAdmin = true;
+
+  // Check if a link is active
+  const isActiveLink = (href: string) => {
+    return pathname === href
+      ? "text-[var(--color-primary)] bg-[var(--color-primary)]/10"
+      : "text-gray-700 hover:text-[var(--color-primary)] hover:bg-gray-100";
+  };
   return (
     <Sidebar variant='floating' {...props}>
       <SidebarHeader>
@@ -79,14 +87,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
               <Link href='/'>
-                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
-                  <GalleryVerticalEnd className='size-6' />
-                </div>
-                <div className='flex flex-col gap-0.5 leading-none'>
-                  <span className='font-semibold'>
-                    AI-Driven Ticket Booking System
-                  </span>
-                </div>
+                <Ticket
+                  size={48}
+                  className='w-8 h-8 text-[var(--color-primary)]'
+                />
+                <span>TicketHub</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -98,8 +103,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {isAdmin
               ? data.adminNav.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url} className='font-medium text-[16px]'>
+                    <SidebarMenuButton
+                      asChild
+                      className='hover:text-[var(--color-primary)]'
+                    >
+                      <Link
+                        href={item.url}
+                        className={`${isActiveLink(
+                          item.url
+                        )} ont-medium text-[16px]`}
+                      >
                         <item.icon className='size-6' />
                         <span>{item.title}</span>
                       </Link>
@@ -108,8 +121,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ))
               : data.userNav.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url} className='font-medium'>
+                    <SidebarMenuButton
+                      asChild
+                      className='hover:text-[var(--color-primary)]'
+                    >
+                      <Link
+                        href={item.url}
+                        className={`${isActiveLink(
+                          item.url
+                        )} ont-medium text-[16px]`}
+                      >
                         <item.icon className='size-6' />
                         <span>{item.title}</span>
                       </Link>
@@ -118,8 +139,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ))}
             {data.commonNav.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <Link href={item.url} className='font-medium'>
+                <SidebarMenuButton
+                  asChild
+                  className='hover:text-[var(--color-primary)]'
+                >
+                  <Link
+                    href={item.url}
+                    className={`${isActiveLink(
+                      item.url
+                    )} ont-medium text-[16px]`}
+                  >
                     <item.icon className='size-6' />
                     <span>{item.title}</span>
                   </Link>
