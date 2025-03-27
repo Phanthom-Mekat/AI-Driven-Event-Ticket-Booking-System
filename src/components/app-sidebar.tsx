@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Settings2,
   Ticket,
+  TicketCheckIcon,
   User,
   Users,
 } from "lucide-react";
@@ -34,6 +35,11 @@ const data = {
       title: "Event Management",
       url: "/dashboard/event-management",
       icon: CalendarClock,
+    },
+    {
+      title: "Ticket Management",
+      url: "/dashboard/ticket-management",
+      icon: TicketCheckIcon,
     },
     {
       title: "Revenue & Analytics",
