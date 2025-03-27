@@ -2,7 +2,16 @@ import { FaArrowRight } from 'react-icons/fa';
 
 const CTA = () => {
   return (
-    <section className="bg-gradient-to-r w-11/12 md:max-w-7xl mx-auto from-black to-black/10 py-16 px-8 text-white flex flex-col items-center text-center rounded-lg shadow-lg mt-12">
+    <div>
+ <div className="text-center mb-8">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-700 dark:text-neutral-200 mb-3">
+                Join Us & Experience the Best Events!
+                </h2>
+                <p className="text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto">
+                Sign up today and start exploring events tailored just for you.
+                </p>
+            </div>
+    <section className="bg-gradient-to-r w-11/12 md:max-w-7xl mx-auto from-black to-black/10 py-16 px-8 text-white flex flex-col items-center text-center rounded-lg shadow-lg ">
       {/* Title */}
       <h2 className="text-3xl md:text-4xl font-semibold mb-6">
         Ready to take the next step?
@@ -19,6 +28,7 @@ const CTA = () => {
         <FaArrowRight className="text-xl" />
       </button>
     </section>
+    </div>
   );
 }
 
