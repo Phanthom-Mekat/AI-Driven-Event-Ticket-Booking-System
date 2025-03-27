@@ -28,6 +28,7 @@ import {
   SheetTitle, 
   SheetTrigger 
 } from '@/components/ui/sheet';
+import { useSession } from 'next-auth/react';
 
 // Dummy NextAuth session structure
 // const session = {
@@ -38,16 +39,18 @@ import {
 //   },
 //   expires: '2024-12-31T23:59:59.999Z'
 // };
-const session = null
+
 
 const Navbar: React.FC = () => {
+  const { data: session } = useSession();
+console.log(session, "session data");
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Navigation menu items
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/events', label: 'Events', icon: Calendar },
+    { href: '/all-event', label: 'Events', icon: Calendar },
     { href: '/categories', label: 'Categories', icon: Layers },
     { href: '/my-tickets', label: 'My Tickets', icon: Ticket }
   ];
