@@ -15,7 +15,9 @@ export default function Home() {
             <Testimonials/>
 
             <FAQ/>
-
+            <Statistics/>
+            <UpcomingEvents/>
+            <CTA/>
         </div>
 
     );
