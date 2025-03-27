@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 
-const CTA = () => {
+const CTA = () => { 
   return (
     <div className="pb-12">
       <div className="text-center mb-12">

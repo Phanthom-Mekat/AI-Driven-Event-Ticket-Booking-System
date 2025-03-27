@@ -14,9 +14,7 @@ export default function Home() {
             <Hero/>
             <PopularCategories/>
             <Testimonials/>
-            <Statistics/>
-            <UpcomingEvents/>
-            <CTA/>
+           
 
         </div>
 
