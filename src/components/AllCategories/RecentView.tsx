@@ -2,30 +2,15 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { FaHeart } from "react-icons/fa";
-
-// Define the Event type
-interface Event {
-  title: string;
-  image: string;
-  category: string;
-  location: string;
-  duration: string;
-  forWhom: string;
-  price: string;
-  reviews: number;
-  rating: number;
-}
-
-// Define the props interface
-interface EventCardsProps {
-  events: Event[]; // Expecting an array of events from `page.tsx`
-}
-
-export default function EventCards({ events = [] }: EventCardsProps) {
+import eventData from "../../data/events.json" 
+export default function RecentView() {
   return (
+    <>
+     <h1 className="text-3xl font-bold mt-12 ">RECENTLY VIEWED</h1>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-      {events.length > 0 ? (
-        events.map((event, index) => (
+       
+      {eventData.events.length > 0 ? (
+       eventData.events.map((event, index) => (
           <div
             key={index}
             className="border rounded-xl p-4 shadow-lg transition-transform hover:scale-105 duration-300"
@@ -60,5 +45,6 @@ export default function EventCards({ events = [] }: EventCardsProps) {
         <p className="text-center text-gray-500">No events found.</p>
       )}
     </div>
+    </>
   );
 }
