@@ -1,4 +1,3 @@
-import Navbar from "@/components/navbar/Navbar";
 import Searching from "@/components/AllCategories/Searching";
 import CategoryTags from "@/components/AllCategories/CategoryTags";
 import SortingDropdown from "@/components/AllCategories/SortingDropdown";
@@ -7,12 +6,9 @@ import { IoIosArrowForward } from "react-icons/io";
 
 export default function Page() {
   return (
-    <div className="w-11/12 mx-auto">
-      {/* Navbar */}
-      <Navbar />
-
+    <div className="w-11/12 mx-auto ">
       {/* Search Section */}
-      <div className="mt-16 pt-8">
+      <div className="pt-8">
         <Searching />
       </div>
 
