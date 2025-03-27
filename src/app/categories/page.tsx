@@ -9,6 +9,8 @@ import SortingDropdown from "@/components/AllCategories/SortingDropdown";
 import EventCards from "@/components/AllCategories/EventCards";
 import { IoIosArrowForward } from "react-icons/io";
 import eventData from "../../data/events.json";
+import RecentView from "@/components/AllCategories/RecentView";
+import FAQ from "@/components/AllCategories/FAQ";
 
 // Define Event Type
 interface Event {
@@ -71,7 +73,7 @@ export default function Page() {
       <Navbar />
 
       {/* Search Section */}
-      <div className="mt-16 pt-8">
+      <div className="mt-8 lg:mt-16 pt-8">
         <Searching updateFilters={updateFilters} />
       </div>
 
@@ -81,7 +83,7 @@ export default function Page() {
         <h5 className="text-gray-600 text-sm">Search the site</h5>
       </div>
 
-      <h1 className="text-3xl font-bold mt-2">Here’s What We Found</h1>
+      <h1 className="text-3xl font-bold mt-2">HERE’s What We Found</h1>
 
       {/* Filters & Sorting */}
       <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -91,6 +93,11 @@ export default function Page() {
 
       {/* Event Cards Section */}
       <EventCards events={filteredEvents} />
+      {/* when searching params then the data store backend then recentview page show */}
+      <RecentView></RecentView>
+       {/* faq section adding intigate mailgun/nodemailer for next day */}
+       <FAQ></FAQ>
+
     </div>
   );
 }

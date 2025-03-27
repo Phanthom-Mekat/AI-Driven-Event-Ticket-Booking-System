@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export default function Searching({ updateFilters }: SearchingProps) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-3">
+    <div className="flex md:flex-row flex-col items-center justify-center gap-3">
       <Select onValueChange={(value) => handleChange("location", value)}>
         <SelectTrigger className="w-full ">
           <SelectValue placeholder="Location" />
@@ -113,7 +113,7 @@ export default function Searching({ updateFilters }: SearchingProps) {
       <Button
         variant="outline"
         onClick={applyFilters}
-        className="border border-primary p-3 rounded-lg bg-primary text-white"
+        className="border border-primary p-3 rounded-lg bg-[#902B27] text-white"
       >
         <FaArrowRight />
       </Button>
