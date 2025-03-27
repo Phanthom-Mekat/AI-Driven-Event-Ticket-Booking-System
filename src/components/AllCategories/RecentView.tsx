@@ -3,7 +3,15 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { FaHeart } from "react-icons/fa";
 import eventData from "../../data/events.json" 
+import { useRouter } from "next/navigation";
 export default function RecentView() {
+   const router = useRouter();
+  
+    // Handler function for redirecting to event details page
+    const handleDetails = (id: number) => {
+      router.push(`/categories/${id}`);  
+      console.log(id);
+    };
   return (
     <>
      <h1 className="text-3xl font-bold mt-12 ">RECENTLY VIEWED</h1>
@@ -35,7 +43,9 @@ export default function RecentView() {
               <p className="text-gray-500 text-sm">{event.category} • {event.location}</p>
               <p className="text-gray-500 text-sm">{event.duration} • {event.forWhom}</p>
               <p className="text-xl font-bold mt-1 text-primary">{event.price}</p>
-              <Button className="bg-[#902B27] text-white w-full mt-4 py-2 rounded-lg">
+              <Button
+               onClick={() => handleDetails(event.id)} 
+              className="bg-[#902B27] text-white w-full mt-4 py-2 rounded-lg">
                 Book Now
               </Button>
             </div>
