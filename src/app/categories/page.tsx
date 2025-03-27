@@ -94,8 +94,8 @@ export default function Page() {
       {/* Event Cards Section */}
       <EventCards events={filteredEvents} />
       {/* when searching params then the data store backend then recentview page show */}
-      <RecentView  events={filteredEvents}></RecentView>
-       {/* faq section adding intigate mailgun for next day */}
+      <RecentView></RecentView>
+       {/* faq section adding intigate mailgun/nodemailer for next day */}
        <FAQ></FAQ>
 
     </div>
