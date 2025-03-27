@@ -47,7 +47,7 @@ const data = [
     location: "Paris, France",
     description:
       "Explore groundbreaking works from emerging artists at the Modern Art Expo in the heart of Paris.",
-    src: "https://i.imgur.com/Qofj3lc.jpeg",
+    src: "https://i.imgur.com/7uD9AQL.jpeg",
     ticketsSold: 3200,
     slug: "modern-art-expo",
   },
@@ -58,7 +58,7 @@ const data = [
     location: "San Francisco, California",
     description:
       "Learn the latest coding skills and tech trends at this intensive bootcamp for aspiring developers and engineers.",
-    src: "https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "https://i.imgur.com/8FQMcGK.png",
     ticketsSold: 500,
     slug: "tech-coding-bootcamp",
   },
@@ -69,7 +69,7 @@ const data = [
     location: "London, UK",
     description:
       "Catch the best tennis players in action at the prestigious Grand Slam Tennis Tournament in London.",
-    src: "https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "https://i.imgur.com/dRZ64br.png",
     ticketsSold: 7000,
     slug: "grand-slam-tennis",
   },
@@ -80,7 +80,7 @@ const data = [
     location: "New York, USA",
     description:
       "An exclusive event for business leaders and entrepreneurs to expand their networks and share insights.",
-    src: "https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "https://i.imgur.com/Jh2sB3q.jpeg",
     ticketsSold: 1500,
     slug: "business-networking-gala",
   },
@@ -91,7 +91,7 @@ const data = [
     location: "Berlin, Germany",
     description:
       "Celebrate global diversity through music, food, and art at the Global Cultural Festival in Berlin.",
-    src: "https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "https://i.imgur.com/7paRx5T.png",
     ticketsSold: 10000,
     slug: "global-cultural-fest",
   },
