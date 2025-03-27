@@ -12,6 +12,7 @@ export default function RecentView() {
       router.push(`/categories/${id}`);  
       console.log(id);
     };
+    
   return (
     <>
      <h1 className="text-3xl font-bold mt-12 ">RECENTLY VIEWED</h1>
