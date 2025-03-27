@@ -9,6 +9,7 @@ import EventCards from "@/components/AllCategories/EventCards";
 import { IoIosArrowForward } from "react-icons/io";
 import eventData from "@/data/events.json";
 import RecentView from "@/components/AllCategories/RecentView";
+import FAQ from "@/components/AllCategories/FAQ";
 
 // Define Event Type
 interface Event {
@@ -91,6 +92,7 @@ export default function Page() {
       {/* when searching params then the data store backend then recentview page show */}
       <RecentView></RecentView>
        {/* faq section adding intigate mailgun/nodemailer for next day */}
+       <FAQ></FAQ>
     </div>
   );
 }
