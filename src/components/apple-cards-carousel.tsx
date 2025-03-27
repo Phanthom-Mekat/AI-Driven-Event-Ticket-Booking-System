@@ -242,7 +242,7 @@ export const Card = ({
                 📅 {card.date} | 📍 {card.location}
               </p>
               <p className="mt-4 font-medium">
-                🎟️ Tickets Sold: {card.ticketsSold}
+                Tickets Sold: {card.ticketsSold}
               </p>
             </motion.div>
           </div>
@@ -297,9 +297,7 @@ export const Card = ({
               <FaTicketAlt className="text-2xl" />
               <span>{card.ticketsSold} Tickets Sold</span>
             </div>
-            <span className="text-sm hidden md:block md:text-base font-semibold text-white">
-              🎟️
-            </span>
+            
           </motion.p>
         </div>
 
