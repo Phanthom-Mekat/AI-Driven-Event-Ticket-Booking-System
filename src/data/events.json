@@ -1,0 +1,71 @@
+{
+    "events": [
+      {
+        "title": "AI & Machine Learning Bootcamp",
+        "image": "/image/img2.jpg",
+        "category": "Technology",
+        "location": "San Francisco, CA",
+        "duration": "3 Days",
+        "forWhom": "Developers & Data Scientists",
+        "price": "$299",
+        "reviews": 120,
+        "rating": 4.8
+      },
+      {
+        "title": "Cybersecurity Fundamentals Workshop",
+        "image": "/image/cybersecurity.jpg",
+        "category": "Cybersecurity",
+        "location": "New York, NY",
+        "duration": "2 Days",
+        "forWhom": "IT Professionals & Security Analysts",
+        "price": "$199",
+        "reviews": 85,
+        "rating": 4.7
+      },
+      {
+        "title": "Blockchain & Web3 Development",
+        "image": "/image/blockchain.jpg",
+        "category": "Blockchain",
+        "location": "Miami, FL",
+        "duration": "4 Days",
+        "forWhom": "Developers & Entrepreneurs",
+        "price": "$250",
+        "reviews": 95,
+        "rating": 4.9
+      },
+      {
+        "title": "Cloud Computing with AWS & Azure",
+        "image": "/image/cloud-computing.jpg",
+        "category": "Cloud Computing",
+        "location": "Seattle, WA",
+        "duration": "5 Days",
+        "forWhom": "Cloud Engineers & DevOps",
+        "price": "$275",
+        "reviews": 110,
+        "rating": 4.8
+      },
+      {
+        "title": "UI/UX Design & Prototyping",
+        "image": "/image/ui-ux.jpg",
+        "category": "Design",
+        "location": "Los Angeles, CA",
+        "duration": "3 Days",
+        "forWhom": "UI/UX Designers & Product Managers",
+        "price": "$180",
+        "reviews": 70,
+        "rating": 4.6
+      },
+      {
+        "title": "Data Science & Analytics Workshop",
+        "image": "/image/data-science.jpg",
+        "category": "Data Science",
+        "location": "Chicago, IL",
+        "duration": "4 Days",
+        "forWhom": "Analysts & Business Intelligence Professionals",
+        "price": "$320",
+        "reviews": 130,
+        "rating": 4.9
+      }
+    ]
+  }
+  
