@@ -33,6 +33,7 @@ import {
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import Spinner from "@/components/common/Spinner";
 
 type Event = {
   _id: string;
@@ -105,14 +106,14 @@ const fackEvents: Event[] = [
 ];
 
 const EventManagementPage = () => {
+  const [data, setData] = useState<Event[]>(fackEvents);
+  const [loading, setLoading] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  //
-  const [data, setData] = useState<Event[]>(fackEvents);
-  const [loading, setLoading] = useState(false);
+  
 
   const columns: ColumnDef<Event>[] = [
     {
@@ -238,7 +239,14 @@ const EventManagementPage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
+  }
+  if ((data?.length ?? 0) === 0) {
+    return (
+      <div className='flex justify-center items-center'>
+        <h1 className='text-3xl font-bold text-red-500'>No data found</h1>
+      </div>
+    );
   }
   return (
     <div className='w-full p-6'>
@@ -356,7 +364,5 @@ const EventManagementPage = () => {
     </div>
   );
 };
-
-
 
 export default EventManagementPage;
