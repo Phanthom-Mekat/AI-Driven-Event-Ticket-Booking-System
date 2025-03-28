@@ -252,6 +252,7 @@ const EventManagementPage = () => {
   }
   return (
     <div className='w-full p-6'>
+      <h1 className='text-2xl font-bold'>Event Management</h1>
       <div className='flex gap-4 items-center py-4'>
         <Input
           placeholder='Search by EventName...'
