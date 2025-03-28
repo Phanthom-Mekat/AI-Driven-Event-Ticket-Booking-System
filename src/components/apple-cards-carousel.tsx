@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
   createContext,
-  useContext,
+  useContext
 } from "react";
 import {
   IconArrowNarrowLeft,
@@ -293,13 +293,13 @@ export const Card = ({
           </div>
 
           {/* Tickets Sold Section */}
-          <motion.p className="text-primary font-medium bg-[var(--color-primary)]/90 md:py-4 px-6 text-sm md:text-base font-sans mt-4 rounded-xl flex items-center justify-between">
+          <motion.div className="text-primary font-medium bg-[var(--color-primary)]/90 md:py-4 px-6 text-sm md:text-base font-sans mt-4 rounded-xl flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <FaTicketAlt className="text-2xl" />
               <span>{card.ticketsSold} Tickets Sold</span>
             </div>
             
-          </motion.p>
+          </motion.div>
         </div>
 
         {/* Image Background */}

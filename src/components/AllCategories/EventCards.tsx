@@ -1,10 +1,12 @@
-"use client";
+ "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { FaHeart } from "react-icons/fa";
 
 // Define the Event type
 interface Event {
+  id: number;
   title: string;
   image: string;
   category: string;
@@ -22,12 +24,20 @@ interface EventCardsProps {
 }
 
 export default function EventCards({ events = [] }: EventCardsProps) {
+  const router = useRouter();
+
+  // Handler function for redirecting to event details page
+  const handleDetails = (id: number) => {
+    router.push(`/categories/${id}`);  
+    console.log(id);
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
       {events.length > 0 ? (
-        events.map((event, index) => (
+        events.map((event) => (
           <div
-            key={index}
+            key={event.id}
             className="border rounded-xl p-4 shadow-lg transition-transform hover:scale-105 duration-300"
           >
             <div className="relative">
@@ -50,7 +60,10 @@ export default function EventCards({ events = [] }: EventCardsProps) {
               <p className="text-gray-500 text-sm">{event.category} • {event.location}</p>
               <p className="text-gray-500 text-sm">{event.duration} • {event.forWhom}</p>
               <p className="text-xl font-bold mt-1 text-primary">{event.price}</p>
-              <Button className="bg-[#902B27] text-white w-full mt-4 py-2 rounded-lg">
+              <Button 
+                onClick={() => handleDetails(event.id)} 
+                className="bg-[#902B27] text-white w-full mt-4 py-2 rounded-lg"
+              >
                 Book Now
               </Button>
             </div>
