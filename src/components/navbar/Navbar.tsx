@@ -52,7 +52,7 @@ console.log(session, "session data");
     { href: '/', label: 'Home', icon: Home },
     { href: '/all-event', label: 'Events', icon: Calendar },
     { href: '/categories', label: 'Categories', icon: Layers },
-    { href: '/my-tickets', label: 'My Tickets', icon: Ticket }
+    { href: '/my-ticket', label: 'My Tickets', icon: Ticket }
   ];
 
   const profileDropdownItems = [

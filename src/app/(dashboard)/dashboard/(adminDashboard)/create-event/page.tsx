@@ -53,15 +53,16 @@ export default function CreateEventPage() {
             {/* Manual Description Taps */}
             <TabsContent value='manual'>
               <Card>
-                <form onSubmit={handleSubmit}>
-                  <CardHeader>
-                    <CardTitle>Event Details</CardTitle>
-                    <CardDescription>
-                      Fill in the details of your event. All fields are required
-                      unless marked as optional.
-                    </CardDescription>
-                  </CardHeader>
+                <form onSubmit={handleSubmit}> 
                   <CardContent className='space-y-6'>
+                    <div className='space-y-2'>
+                      <Label htmlFor='instructor'>Instructor:</Label>
+                      <Input
+                        id='instructor'
+                        placeholder='Enter event instructor'
+                        required
+                      />
+                    </div>
                     <div className='space-y-2'>
                       <Label htmlFor='title'>Event Title</Label>
                       <Input
