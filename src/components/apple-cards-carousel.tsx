@@ -1,7 +1,6 @@
 "use client";
 import {
   FaCalendarAlt,
-  FaInfoCircle,
   FaMapMarkerAlt,
   FaTicketAlt,
 } from "react-icons/fa";
@@ -22,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import Image, { ImageProps } from "next/image";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { JSX } from "react/jsx-runtime";
 
 interface CarouselProps {
   items: JSX.Element[];
@@ -32,7 +32,7 @@ type Card = {
   src: string;
   title: string;
   category: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
   date: string;
   description: string;
   location: string;
@@ -192,9 +192,10 @@ export const Card = ({
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  useOutsideClick(containerRef, () => handleClose());
+  useOutsideClick(containerRef as React.RefObject<HTMLDivElement>, () => handleClose());
 
   const handleOpen = () => {
     setOpen(true);
