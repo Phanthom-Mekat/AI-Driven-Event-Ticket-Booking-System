@@ -9,7 +9,7 @@ import FAQ from "@/components/AllCategories/FAQ";
 
 export default function Home() {
     return (
-        <div className={"container mx-auto"}>
+        <div className={"w-11/12 mx-auto"}>
             <Hero/>
             <PopularCategories/>
             <Testimonials/>

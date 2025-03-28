@@ -13,7 +13,7 @@ const CTA = () => {
         </p>
       </div>
       <section 
-  className="relative w-11/12 md:max-w-7xl mx-auto py-16 px-8 text-white flex flex-col items-center text-center rounded-lg shadow-lg bg-cover bg-center"
+  className="relative container md:max-w-7xl mx-auto py-16 px-8 text-white flex flex-col items-center text-center rounded-lg shadow-lg bg-cover bg-center"
   style={{ backgroundImage: "url('https://i.imgur.com/DnJVTS3.png')" }}
 >
   {/* Light Dark Overlay */}
