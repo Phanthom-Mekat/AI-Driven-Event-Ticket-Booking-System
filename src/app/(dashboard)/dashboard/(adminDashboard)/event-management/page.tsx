@@ -42,7 +42,7 @@ type Event = {
   location: string;
 };
 
-const fackEvents: Event[] = [
+const fakeEvents: Event[] = [
   {
     _id: "1",
     eventName: "Event 1",
@@ -106,14 +106,12 @@ const fackEvents: Event[] = [
 ];
 
 const EventManagementPage = () => {
-  const [data, setData] = useState<Event[]>(fackEvents);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<Event[]>(fakeEvents);
+  const [loading] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-
-  
 
   const columns: ColumnDef<Event>[] = [
     {
@@ -208,10 +206,14 @@ const EventManagementPage = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Update it!",
-    }).then((result: any) => {
+    }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        // do something
-        alert(`Edit ${id}`);
+        setData(prevData => prevData.map(event => 
+          event._id === id 
+            ? { ...event, eventName: "Updated Name" } 
+            : event
+        ));
+        toast.success("Event updated successfully");
       }
     });
   };
@@ -227,14 +229,14 @@ const EventManagementPage = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
-      }).then((result: any) => {
+      }).then((result: { isConfirmed: boolean }) => {
         if (result.isConfirmed) {
-          //   delete api call here
+          setData(prevData => prevData.filter(event => event._id !== id));
           alert(`Delete ${id}`);
         }
       });
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'An unknown error occurred');
     }
   };
 
