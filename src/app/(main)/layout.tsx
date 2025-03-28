@@ -20,7 +20,7 @@ export default function RootLayout({
                                    }: Readonly<{ children: React.ReactNode }>) {
     return (
         <SessionProvider>
-            <html lang="en">
+            <html lang="en" suppressHydrationWarning>
             <body className={`${sora.variable} antialiased bg-gray-50 text-gray-900 mt-16`}>
             <Navbar/>
             {children}
