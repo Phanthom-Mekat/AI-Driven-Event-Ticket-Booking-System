@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function page() {
   return (
-    <div className='w-11/12 mx-auto flex flex-col items-center justify-center my-8'> 
+    <div className='container mx-auto flex flex-col items-center justify-center my-8'> 
       <OutComes></OutComes>
       <CodingExpert></CodingExpert>
     </div>

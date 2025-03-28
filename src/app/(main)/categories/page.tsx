@@ -67,7 +67,7 @@ export default function Page() {
   );
 
   return (
-    <div className="container mx-auto">
+    <div className="w-11/12 mx-auto">
       {/* Search Section */}
       <div className="pt-8">
         <Searching updateFilters={updateFilters} />
