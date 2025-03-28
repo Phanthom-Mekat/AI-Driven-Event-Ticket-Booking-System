@@ -18,9 +18,9 @@ export default function ImageGroups() {
                 {images.map((image, idx) => (
                     <motion.div
                         key={"images" + idx}
-                        style={{
-                            rotate: Math.random() * 20 - 10,
-                        }}
+                        // style={{
+                        //     rotate: Math.random() * 20 - 10,
+                        // }}
                         whileHover={{
                             scale: 1.1,
                             rotate: 0,
