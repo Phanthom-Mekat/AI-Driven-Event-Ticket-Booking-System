@@ -37,7 +37,7 @@ const data = {
       icon: CalendarClock,
     },
     {
-      title: "Ticket Management",
+      title: "Booked Ticket Management",
       url: "/dashboard/ticket-management",
       icon: TicketCheckIcon,
     },
