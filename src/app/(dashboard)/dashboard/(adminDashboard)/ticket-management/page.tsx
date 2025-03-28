@@ -7,10 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable, VisibilityState } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-
 
 type BookedTicket = {
   _id: string;
@@ -83,17 +82,41 @@ const bookedTickets: BookedTicket[] = [
   },
 ];
 
-
 const TicketManagementPage = () => {
   const [data, setData] = useState<BookedTicket[]>(bookedTickets);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  // Simulate data loading
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Simulating an API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   // handle update ConfirmationStatus by id
   const updateConfirmStatus = async (id: string) => {
+    // Simulate updating confirmation status
+    const updatedTickets = data.map(ticket => 
+      ticket._id === id 
+        ? { ...ticket, confirmationStatus: "Confirmed" }
+        : ticket
+    );
+    
+    setData(updatedTickets);
+    
     //  Update the ticket confirmation status of the api call here
     alert(`Confirmation status updated successfully for ${id}`);
     toast.success("Confirmation status updated successfully");
@@ -110,32 +133,14 @@ const TicketManagementPage = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
-      alert(`Ticket deleted successfully for ${id} ${result}`);
-      // if (result.isConfirmed) {
-      //   try {
-      //     const response = await fetch(`/api/tickets/${id}`, {
-      //       method: "DELETE",
-      //     });
-
-      //     if (!response.ok) {
-      //       throw new Error("Failed to delete the ticket");
-      //     }
-
-      //     Swal.fire({
-      //       title: "Deleted!",
-      //       text: "Your ticket has been deleted.",
-      //       icon: "success",
-      //     });
-
-      //     // Optionally, refresh data or update UI
-      //   } catch (err:any) {
-      //     Swal.fire({
-      //       title: "Error!",
-      //       text: `Failed to delete the ticket: ${err.message}`,
-      //       icon: "error",
-      //     });
-      //   }
-      // }
+      if (result.isConfirmed) {
+        // Remove the ticket from the data
+        const updatedTickets = data.filter(ticket => ticket._id !== id);
+        setData(updatedTickets);
+        
+        alert(`Ticket deleted successfully for ${id}`);
+        toast.success("Ticket deleted successfully");
+      }
     });
   };
 
@@ -209,12 +214,12 @@ const TicketManagementPage = () => {
         return (
           <div>
             {row.original.paymentStatus === "Paid" &&
-            row.original.confirmationStatus === "Pending" ? (
+            row.original.confirmationStatus === "Unconfirmed" ? (
               <Button
                 onClick={() => updateConfirmStatus(id)}
                 variant={"default"}
               >
-                {row.original.confirmationStatus}
+                Confirm
               </Button>
             ) : (
               <div className='cursor-not-allowed'>
@@ -267,6 +272,7 @@ const TicketManagementPage = () => {
   if (loading) {
     return <Spinner />;
   }
+
   if ((data?.length ?? 0) === 0) {
     return (
       <div className='flex justify-center items-center'>
