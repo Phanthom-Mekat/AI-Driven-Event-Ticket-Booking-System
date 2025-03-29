@@ -1,4 +1,4 @@
-
+"use server";
 import { NextRequest, NextResponse } from 'next/server';
 import  prisma from '@/lib/prisma';
 
@@ -9,7 +9,6 @@ export async function DELETE(
   try {
     const { id } = params;
 
-    // Check if user exists
     const user = await prisma.user.findUnique({
       where: { id },
     });
@@ -21,7 +20,6 @@ export async function DELETE(
       );
     }
 
-    // Delete the user
     await prisma.user.delete({
       where: { id },
     });
