@@ -65,7 +65,7 @@ model Event {
 
   totalTickets     Int
   availableTickets Int?
-  ticketPrice      Decimal @db.Decimal(10, 2)
+  ticketPrice      Int
 
   organizerId String
   organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id])
