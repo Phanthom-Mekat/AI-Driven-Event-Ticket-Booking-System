@@ -8,7 +8,7 @@ export function UpcomingEvents() {
   ));
 
   return (
-    <div className="py-20">
+    <div className="py-20" id="upcoming-events">
         <div className="text-center">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-700 dark:text-neutral-200 mb-3">
           Exciting Upcoming Events Await You!
