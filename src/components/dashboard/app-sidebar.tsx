@@ -1,8 +1,6 @@
 import * as React from "react";
 import {
   CalendarClock,
-  ChartColumnIncreasing,
-  CheckCheck,
   CheckCircle,
   LayoutDashboard,
   Settings2,
