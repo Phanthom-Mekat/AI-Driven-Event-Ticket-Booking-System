@@ -78,7 +78,6 @@ model Event {
   @@map("events")
 }
 
-//Auth
 model Account {
   userId            String
   type              String

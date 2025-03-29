@@ -2,13 +2,26 @@
 import prisma from "@/lib/prisma";
 import {auth} from "@/auth";
 
-export async function createEvent(formData: any) {
+
+interface EventFormData {
+    title: string;
+    description: string;
+    category: string;
+    location: string;
+    startDate: Date;
+    endDate: Date;
+    totalTickets: number;
+    ticketPrice: number;
+    coverImage: string;
+}
+
+
+export async function createEvent(formData: EventFormData) {
     const session = await auth()
-    console.log(session?.user?.id)
 
     const data = {
         ...formData,
-        organizerId: session?.user?.id
+        organizerId: session?.user?.id as string
     }
 
     try {
