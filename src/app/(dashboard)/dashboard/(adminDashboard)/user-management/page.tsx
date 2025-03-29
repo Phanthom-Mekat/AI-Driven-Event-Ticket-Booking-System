@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Spinner from "@/components/common/Spinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -31,57 +33,46 @@ import {
 } from "@tanstack/react-table";
 import { ChevronDown, Trash2 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 type User = {
-  _id: string;
-  name: string;
+  id: string;
+  name: string | null;
   email: string;
-  image: string;
+  image: string | null;
+  role: string | null;
+  createdAt: Date;
 };
 
-const fackUsers: User[] = [
-  {
-    _id: "1",
-    name: "Alice Johnson",
-    email: "alice@example.com",
-    image: "/image/img1.jpg",
-  },
-  {
-    _id: "2",
-    name: "Bob Smith",
-    email: "bob@example.com",
-    image: "/image/img1.jpg",
-  },
-  {
-    _id: "3",
-    name: "Charlie Brown",
-    email: "charlie@example.com",
-    image: "/image/img1.jpg",
-  },
-  {
-    _id: "4",
-    name: "David Wilson",
-    email: "david@example.com",
-    image: "/image/img1.jpg",
-  },
-  {
-    _id: "5",
-    name: "Emma White",
-    email: "emma@example.com",
-    image: "/image/img1.jpg",
-  },
-];
-
 const UserManagementPage = () => {
-  const [users, setUsers] = useState<User[]>(fackUsers);
-  const [loading] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  // Fetch users from API
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch users');
+        }
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        toast.error('Failed to load users');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const columns: ColumnDef<User>[] = [
     {
@@ -109,20 +100,25 @@ const UserManagementPage = () => {
     {
       accessorKey: "image",
       header: "User Image",
-      cell: ({ row }) => (
-        <Image
-          src={row.getValue("image")}
-          alt={row.getValue("name")}
-          width={32}
-          height={32}
-          className='w-8 h-8 rounded-full'
-        />
-      ),
+      cell: ({ row }) => {
+        const image = row.getValue("image") as string | null;
+        return (
+          <div className="flex justify-center">
+            <Image
+              src={image || "/image/avatar-placeholder.jpg"}
+              alt={row.getValue("name") as string || "User"}
+              width={32}
+              height={32}
+              className='w-8 h-8 rounded-full'
+            />
+          </div>
+        );
+      },
     },
     {
       accessorKey: "name",
       header: "User Name",
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => <div>{row.getValue("name") || "N/A"}</div>,
     },
     {
       accessorKey: "email",
@@ -130,10 +126,23 @@ const UserManagementPage = () => {
       cell: ({ row }) => <div>{row.getValue("email")}</div>,
     },
     {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => <div>{row.getValue("role") || "User"}</div>,
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Joined",
+      cell: ({ row }) => {
+        const date = row.getValue("createdAt") as Date;
+        return <div>{date ? new Date(date).toLocaleDateString() : "N/A"}</div>;
+      },
+    },
+    {
       accessorKey: "action",
       header: "Action",
       cell: ({ row }) => {
-        const id = row.original._id; // Get the id of the current row
+        const id = row.original.id; // Get the id of the current row
         return (
           <span
             onClick={() => handleDelete(id)}
@@ -176,10 +185,23 @@ const UserManagementPage = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
-      }).then((result: { isConfirmed: boolean }) => {
+      }).then(async (result: { isConfirmed: boolean }) => {
         if (result.isConfirmed) {
-          setUsers((prevData) => prevData.filter((event) => event._id !== id));
-          alert(`Delete ${id}`);
+          try {
+            const response = await fetch(`/api/users/${id}`, {
+              method: 'DELETE',
+            });
+            
+            if (!response.ok) {
+              throw new Error('Failed to delete user');
+            }
+            
+            setUsers((prevData) => prevData.filter((user) => user.id !== id));
+            toast.success('User deleted successfully');
+          } catch (error) {
+            console.error('Error deleting user:', error);
+            toast.error('Failed to delete user');
+          }
         }
       });
     } catch (err: unknown) {
@@ -192,10 +214,11 @@ const UserManagementPage = () => {
   if (loading) {
     return <Spinner />;
   }
-  if ((users?.length ?? 0) === 0) {
+  
+  if (users.length === 0) {
     return (
       <div className='flex justify-center items-center'>
-        <h1 className='text-3xl font-bold text-red-500'>No data found</h1>
+        <h1 className='text-3xl font-bold text-red-500'>No users found</h1>
       </div>
     );
   }
