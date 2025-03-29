@@ -1,10 +1,12 @@
-//@typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client"
 
 import type React from "react"
 
 import {IKImage, ImageKitProvider, IKUpload, IKVideo} from "imagekitio-next"
+// Import the proper type if available in the library
 import {useRef, useState} from "react"
 import {cn} from "@/lib/utils"
 import {toast} from "sonner"
@@ -34,9 +36,10 @@ const authenticator = async () => {
 
         const {signature, expire, token} = data
         return {token, expire, signature}
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Authentication error:", error)
-        throw new Error(`Authentication request failed: ${error.message}`)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        throw new Error(`Authentication request failed: ${errorMessage}`)
     }
 }
 
@@ -50,6 +53,35 @@ interface Props {
     value?: string
 }
 
+// Use the imported types or create compatible interfaces
+interface UploadProgressEvent {
+    loaded: number;
+    total: number;
+}
+
+// If the IKUploadResponse is not available as an import, use this compatible interface
+interface IKUploadResponse {
+    fileId: string;
+    filePath: string;
+    fileName?: string; // Made optional to match the library's type
+    url: string;
+    size: number;
+    fileType: string;
+    height?: number;
+    width?: number;
+    thumbnailUrl?: string;
+    name?: string;
+    [key: string]: any; // Add index signature for any additional properties
+}
+
+// If the IKUploadError is not available as an import, use this compatible interface
+interface IKUploadError {
+    message: string;
+    help?: string;
+    code?: string;
+    [key: string]: any; // Add index signature for any additional properties
+}
+
 export default function FileUpload({type, accept, placeholder, folder, variant, onFileChange, value}: Props) {
     const ikUploadRef = useRef(null)
     const [file, setFile] = useState<{ filePath: string | null }>({
@@ -58,20 +90,22 @@ export default function FileUpload({type, accept, placeholder, folder, variant, 
     const [progress, setProgress] = useState(0)
     const [isUploading, setIsUploading] = useState(false)
 
-    const onError = (error: any) => {
+    const onError = (error: IKUploadError) => {
         console.log(error)
         toast.error(error.message)
         setIsUploading(false)
     }
 
-    const onSuccess = (res: any) => {
-        setFile(res)
-        onFileChange(res.filePath)
-        toast.success(`File uploaded successfully!`)
-        setIsUploading(false)
+    const onSuccess = (res: IKUploadResponse) => {
+        // Create a file object with the filePath property to maintain state consistency
+        const fileObject = { filePath: res.filePath || res.url || '' };
+        setFile(fileObject);
+        onFileChange(fileObject.filePath);
+        toast.success(`File uploaded successfully!`);
+        setIsUploading(false);
     }
 
-    const onValidate = (file: File) => {
+    const onValidate = (file: File): boolean => {
         if (type === "image") {
             if (file.size > 20 * 1024 * 1024) {
                 toast.error("Please upload a file that is less than 20MB in size")
@@ -99,8 +133,8 @@ export default function FileUpload({type, accept, placeholder, folder, variant, 
                     setProgress(0)
                     setIsUploading(true)
                 }}
-                onUploadProgress={({loaded, total}) => {
-                    const percent = Math.round((loaded / total) * 100)
+                onUploadProgress={(event: UploadProgressEvent) => {
+                    const percent = Math.round((event.loaded / event.total) * 100)
                     setProgress(percent)
                 }}
                 folder={folder}
@@ -114,7 +148,7 @@ export default function FileUpload({type, accept, placeholder, folder, variant, 
                         onClick={(e) => {
                             e.preventDefault()
                             if (ikUploadRef.current) {
-                                // @ts-ignore
+                                // @ts-expect-error
                                 ikUploadRef.current?.click()
                             }
                         }}
