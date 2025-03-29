@@ -147,6 +147,7 @@ export const DatetimePicker = forwardRef<HTMLDivElement, DateTimeInput>(
     ) => {
         const handleDateChange = useCallback(
             (nextDate: Date | undefined) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 onChange ? onChange(nextDate) : console.log(nextDate);
             },
             [onChange],

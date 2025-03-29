@@ -18,6 +18,7 @@ import {usePathname} from "next/navigation";
 import Link from "next/link";
 import {AppSidebar} from "@/components/dashboard/app-sidebar";
 import "@/app/globals.css";
+import {Toaster} from "sonner";
 import { SessionProvider } from "next-auth/react";
 
 export default function DashboardLayout({
@@ -84,6 +85,7 @@ export default function DashboardLayout({
                             </Breadcrumb>
                         </div>
                     </header>
+                    <Toaster richColors/>
 
                     <main>{children}</main>
                 </SidebarInset>
