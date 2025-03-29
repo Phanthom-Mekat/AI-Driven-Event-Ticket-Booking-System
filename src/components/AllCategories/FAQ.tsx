@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 const FAQ = () => {
   return (
-    <div className="mt-12 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="pt-16 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-8" id="FAQ">
       {/* Left Section */}
       <div>
         <h1 className="text-3xl font-bold">FAQ</h1>

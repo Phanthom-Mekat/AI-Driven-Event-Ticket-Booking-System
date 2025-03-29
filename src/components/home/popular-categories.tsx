@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function PopularCategories() {
     return (
-        <div className="py-12 px-4 md:px-6 lg:px-8">
+        <div className="py-12 px-4 md:px-6 lg:px-8" id="popular-events">
             <div className="text-center mb-10">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-700 dark:text-neutral-200 mb-3">
                     Popular Event Categories

@@ -19,7 +19,7 @@ const Footer = () => {
                     <h3 className="text-lg font-semibold mb-4">Events</h3>
                     <ul className="space-y-2 text-neutral-500">
                         <li><a href="#upcoming-events" className="hover:text-[var(--color-primary)]">Upcoming Events</a></li>
-                        <li><a href="#" className="hover:text-[var(--color-primary)]">Popular Concerts</a></li>
+                        <li><a href="#popular-events" className="hover:text-[var(--color-primary)]">Popular Events</a></li>
                         <li><a href="#" className="hover:text-[var(--color-primary)]">AI-Powered Suggestions</a></li>
                         <li><a href="#" className="hover:text-[var(--color-primary)]">VIP Access</a></li>
                     </ul>
@@ -28,7 +28,7 @@ const Footer = () => {
                 <div className="mx-auto">
                     <h3 className="text-lg font-semibold mb-4">Support</h3>
                     <ul className="space-y-2 text-neutral-500">
-                        <li><a href="#" className="hover:text-[var(--color-primary)]">FAQs</a></li>
+                        <li><a href="#FAQ" className="hover:text-[var(--color-primary)]">FAQs</a></li>
                         <li><a href="#" className="hover:text-[var(--color-primary)]">Customer Support</a></li>
                         <li><a href="#" className="hover:text-[var(--color-primary)]">Refund Policy</a></li>
                     </ul>
@@ -38,7 +38,7 @@ const Footer = () => {
                     <h3 className="text-lg font-semibold mb-4">Company</h3>
                     <ul className="space-y-2 text-neutral-500">
                         <li><a href="#" className="hover:text-[var(--color-primary)]">About Us</a></li>
-                        <li><a href="#" className="hover:text-[var(--color-primary)]">Careers</a></li>
+                        <li><a href="#statistics" className="hover:text-[var(--color-primary)]">Statistics</a></li>
                         <li><a href="#" className="hover:text-[var(--color-primary)]">AI Technology</a></li>
                     </ul>
                 </div>
