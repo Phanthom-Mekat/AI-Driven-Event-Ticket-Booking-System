@@ -16,8 +16,9 @@ import {
 import React, {useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
-import {AppSidebar} from "@/components/app-sidebar";
+import {AppSidebar} from "@/components/dashboard/app-sidebar";
 import "@/app/globals.css";
+import { SessionProvider } from "next-auth/react";
 
 export default function DashboardLayout({
                                             children,
@@ -32,7 +33,7 @@ export default function DashboardLayout({
     }, [pathname]);
 
     return (
-        <>
+        <SessionProvider>
             <html>
             <body>
             <SidebarProvider>
@@ -90,7 +91,7 @@ export default function DashboardLayout({
             </body>
             </html>
 
-        </>
+        </SessionProvider>
 
     );
 }
