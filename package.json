@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postinstall": "prisma generate",
+    "postinstall:neon": "prisma generate --schema=./prisma/schema.neon.prisma",
     "start": "next start",
     "lint": "next lint"
   },
