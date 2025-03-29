@@ -33,6 +33,7 @@ import {
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import Spinner from "@/components/common/Spinner";
 
 type Event = {
   _id: string;
@@ -41,7 +42,7 @@ type Event = {
   location: string;
 };
 
-const fackEvents: Event[] = [
+const fakeEvents: Event[] = [
   {
     _id: "1",
     eventName: "Event 1",
@@ -105,14 +106,12 @@ const fackEvents: Event[] = [
 ];
 
 const EventManagementPage = () => {
+  const [data, setData] = useState<Event[]>(fakeEvents);
+  const [loading] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-
-  //
-  const [data, setData] = useState<Event[]>(fackEvents);
-  const [loading, setLoading] = useState(false);
 
   const columns: ColumnDef<Event>[] = [
     {
@@ -207,10 +206,14 @@ const EventManagementPage = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Update it!",
-    }).then((result: any) => {
+    }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        // do something
-        alert(`Edit ${id}`);
+        setData(prevData => prevData.map(event => 
+          event._id === id 
+            ? { ...event, eventName: "Updated Name" } 
+            : event
+        ));
+        toast.success("Event updated successfully");
       }
     });
   };
@@ -226,22 +229,30 @@ const EventManagementPage = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
-      }).then((result: any) => {
+      }).then((result: { isConfirmed: boolean }) => {
         if (result.isConfirmed) {
-          //   delete api call here
+          setData(prevData => prevData.filter(event => event._id !== id));
           alert(`Delete ${id}`);
         }
       });
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'An unknown error occurred');
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
+  }
+  if ((data?.length ?? 0) === 0) {
+    return (
+      <div className='flex justify-center items-center'>
+        <h1 className='text-3xl font-bold text-red-500'>No data found</h1>
+      </div>
+    );
   }
   return (
     <div className='w-full p-6'>
+      <h1 className='text-2xl font-bold'>Event Management</h1>
       <div className='flex gap-4 items-center py-4'>
         <Input
           placeholder='Search by EventName...'
@@ -356,7 +367,5 @@ const EventManagementPage = () => {
     </div>
   );
 };
-
-
 
 export default EventManagementPage;
