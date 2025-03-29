@@ -1,11 +1,11 @@
-import React from 'react';
+import prisma from "@/lib/prisma";
+import UserManagementTable from "@/app/(dashboard)/dashboard/(adminDashboard)/user-management/user-table";
 
-const UserManagementPage = () => {
+export default async function Users() {
+    const users = await prisma.user.findMany()
     return (
-        <div>
-            User Management page
-        </div>
-    );
-};
-
-export default UserManagementPage;
+        <>
+            <UserManagementTable users={users}/>
+        </>
+    )
+}

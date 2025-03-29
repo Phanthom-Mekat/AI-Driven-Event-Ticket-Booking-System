@@ -9,7 +9,7 @@ const stats = [
 
 const Statistics = () => {
     return (
-        <div className="py-12">
+        <div className="py-12 pt-16" id='statistics'>
             <div className="text-center mb-8">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-700 dark:text-neutral-200 mb-3">
                 Platform Statistics

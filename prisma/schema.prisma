@@ -1,4 +1,3 @@
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -6,8 +5,14 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  ORGANIZER
 }
 
 model User {
@@ -16,14 +21,61 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  role          String?
+  role          UserRole  @default(USER)
   accounts      Account[]
   sessions      Session[]
+
+  organizedEvents Event[]   @relation("EventOrganizer")
+  bookings        Booking[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Booking {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  numberOfTickets Int
+  totalPrice      Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bookings")
+}
+
+model Event {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  category    String
+
+  location   String
+  startDate  DateTime
+  endDate    DateTime
+  coverImage String   @default("https://images.unsplash.com/photo-1472653431158-6364773b2a56?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+
+  totalTickets     Int
+  availableTickets Int?
+  ticketPrice      Int
+
+  organizerId String
+  organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id])
+
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("events")
 }
 
 model Account {
