@@ -68,7 +68,7 @@ export default function EventDetailPage() {
       await stripe?.redirectToCheckout({ sessionId: data.sessionId });
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Failed to initiate payment. Please try again.");
+      alert("Failed to initiate _payment. Please try again.");
     } finally {
       setLoading(false);
     }
