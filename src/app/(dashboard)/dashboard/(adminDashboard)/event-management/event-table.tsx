@@ -65,7 +65,6 @@ export const EventManagementTable = ({eventData}: { eventData: Event[] }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
 
-    // Add these handler functions
     const handleEditEvent = (event: Event) => {
         setSelectedEvent(event)
         setIsEditModalOpen(true)
