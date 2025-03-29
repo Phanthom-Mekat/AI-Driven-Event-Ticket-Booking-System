@@ -12,3 +12,7 @@ export const newEventSchema = z.object({
     ticketPrice: z.coerce.number({message: "Ticket price is required"}).nonnegative({message: "Price cannot be negative"}),
     coverImage: z.string().nonempty({message: "Cover image is required"}),
 });
+
+
+export type NewEventType = z.infer<typeof newEventSchema>;
+

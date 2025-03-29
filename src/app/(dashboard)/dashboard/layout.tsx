@@ -18,6 +18,7 @@ import {usePathname} from "next/navigation";
 import Link from "next/link";
 import {AppSidebar} from "@/components/app-sidebar";
 import "@/app/globals.css";
+import {Toaster} from "sonner";
 
 export default function DashboardLayout({
                                             children,
@@ -83,6 +84,7 @@ export default function DashboardLayout({
                             </Breadcrumb>
                         </div>
                     </header>
+                    <Toaster richColors/>
 
                     <main>{children}</main>
                 </SidebarInset>

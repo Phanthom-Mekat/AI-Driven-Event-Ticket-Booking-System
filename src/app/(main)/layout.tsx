@@ -23,7 +23,7 @@ export default function RootLayout({
         <SessionProvider>
             <html lang="en" suppressHydrationWarning>
             <body className={`${sora.variable} antialiased bg-gray-50 text-gray-900 mt-16`}>
-            <Toaster/>
+            <Toaster richColors/>
             <Navbar/>
             {children}
             </body>
