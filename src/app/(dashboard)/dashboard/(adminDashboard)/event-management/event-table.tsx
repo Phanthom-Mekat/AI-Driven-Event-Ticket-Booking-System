@@ -37,8 +37,11 @@ import {
 import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
 import Image from "next/image";
+import {deleteEvent, updateEvent} from "@/actions/eventActions";
+import {toast} from "sonner";
+import {Badge} from "@/components/ui/badge";
 
-interface Event {
+export interface IEvent {
     id: string
     title: string
     description: string
@@ -55,7 +58,7 @@ interface Event {
     updatedAt: Date
 }
 
-export const EventManagementTable = ({eventData}: { eventData: Event[] }) => {
+export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -63,36 +66,47 @@ export const EventManagementTable = ({eventData}: { eventData: Event[] }) => {
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
+    const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null)
 
-    const handleEditEvent = (event: Event) => {
+    const handleEditEvent = (event: IEvent) => {
         setSelectedEvent(event)
         setIsEditModalOpen(true)
     }
 
-    const handleDeleteEvent = (event: Event) => {
+    const handleDeleteEvent = (event: IEvent) => {
         setSelectedEvent(event)
         setIsDeleteModalOpen(true)
     }
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (selectedEvent) {
-            console.log("Deleting event:", selectedEvent.id)
-            // Call your server action to delete the event here
+            try {
+                const response = await deleteEvent(selectedEvent.id)
+                toast.success(response.message)
+            } catch (error: any) {
+                console.log(error)
+                toast.error(error.message)
+            }
         }
         setIsDeleteModalOpen(false)
     }
 
-    const submitEditForm = (e: React.FormEvent) => {
+    const submitEditForm = async (e: React.FormEvent) => {
         e.preventDefault()
         if (selectedEvent) {
-            console.log("Updating event:", selectedEvent)
-            // Call your server action to update the event here
+            try {
+                const response = await updateEvent(selectedEvent.id, selectedEvent)
+                toast.success(response.message)
+            } catch (error: any) {
+                console.log(error)
+                toast.error(error.message)
+            }
+
         }
         setIsEditModalOpen(false)
     }
 
-    const data: Event[] = eventData
+    const data: IEvent[] = eventData
 
     const formatDate = (date: Date) => {
         return date.toLocaleDateString("en-US", {
@@ -111,7 +125,7 @@ export const EventManagementTable = ({eventData}: { eventData: Event[] }) => {
         }).format(price)
     }
 
-    const columns: ColumnDef<Event>[] = [
+    const columns: ColumnDef<IEvent>[] = [
         {
             id: "select",
             header: ({table}) => (
@@ -350,7 +364,7 @@ export const EventManagementTable = ({eventData}: { eventData: Event[] }) => {
                     <DialogHeader>
                         <DialogTitle>Confirm Deletion</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete the event &#34;{selectedEvent?.title}&#34;? This action
+                            Are you sure you want to delete the event <Badge className={"rounded-sm"}>{selectedEvent?.title}</Badge> ? <br/> This action
                             cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
@@ -446,7 +460,10 @@ export const EventManagementTable = ({eventData}: { eventData: Event[] }) => {
                                     value={selectedEvent?.ticketPrice}
                                     onChange={(e) =>
                                         setSelectedEvent(
-                                            selectedEvent ? {...selectedEvent, ticketPrice: Number(e.target.value)} : null
+                                            selectedEvent ? {
+                                                ...selectedEvent,
+                                                ticketPrice: Number(e.target.value)
+                                            } : null
                                         )
                                     }
                                     className="col-span-3"

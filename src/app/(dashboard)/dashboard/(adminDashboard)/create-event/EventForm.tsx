@@ -11,7 +11,6 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "@/components/ui/input"
 import {Textarea} from "@/components/ui/textarea"
 import {DatetimePicker} from "@/components/ui/datetime-picker"
-import {createEvent} from "@/actions/create-event"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {newEventSchema} from "@/schema/event-schema"
 import FileUpload from "@/components/file-upload"
@@ -19,6 +18,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {CalendarDays, DollarSign, MapPin, Ticket, Upload} from "lucide-react"
 import {Separator} from "@/components/ui/separator"
 import {useRouter} from "next/navigation";
+import {createEvent} from "@/actions/eventActions";
 
 export default function EventForm() {
     const router = useRouter()
