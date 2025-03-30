@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -159,12 +159,12 @@ export default function Home() {
                           remarkPlugins={[remarkGfm]}
                           components={{
                             code({
-                              
                               inline,
-                              
+
                               children,
                               ...props
-                            }) {
+                            }: { inline?: boolean | undefined;
+                                children: ReactNode;}) {
                               return inline ? (
                                 <code
                                   {...props}
