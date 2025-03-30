@@ -8,7 +8,7 @@ const Footer = () => {
                 <div>
                     <div className="flex items-center gap-2 mb-4">
                         <Ticket className="w-8 h-8 text-[var(--color-primary)]" />
-                        <h2 className="text-2xl font-bold">AI Ticket</h2>
+                        <h2 className="text-2xl font-bold">TicketHub</h2>
                     </div>
                     <p className="text-neutral-500">
                         Experience seamless ticket booking with AI-driven personalized event recommendations.
