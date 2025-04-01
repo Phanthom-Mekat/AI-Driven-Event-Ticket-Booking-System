@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import {SessionProvider} from "next-auth/react";
 import Navbar from "@/components/navbar/Navbar";
 import {Toaster} from "sonner";
+import {NuqsAdapter} from "nuqs/adapters/next/app";
 
 const sora = Sora({
     subsets: ["latin"],
@@ -25,7 +26,9 @@ export default function RootLayout({
             <body className={`${sora.variable} antialiased bg-gray-50 text-gray-900 mt-16`}>
             <Toaster richColors/>
             <Navbar/>
-            {children}
+            <NuqsAdapter>
+                {children}
+            </NuqsAdapter>
             </body>
             </html>
         </SessionProvider>
