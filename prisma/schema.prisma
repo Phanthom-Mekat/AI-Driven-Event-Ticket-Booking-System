@@ -68,7 +68,7 @@ model Event {
   ticketPrice      Int
 
   organizerId String
-  organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
+  organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id])
 
   bookings Booking[]
 

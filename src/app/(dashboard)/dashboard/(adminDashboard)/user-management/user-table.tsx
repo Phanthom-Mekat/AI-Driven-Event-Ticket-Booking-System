@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -30,20 +30,11 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import {ChevronDown, Users} from "lucide-react";
+import {ChevronDown, Trash2} from "lucide-react";
 import Image from "next/image";
 import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {deleteUser} from "@/actions/userActions";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-} from "@/components/ui/dialog";
-import {Badge} from "@/components/ui/badge";
-import {NoDataMessage} from "@/components/no-data";
 
 type User = {
     id: string;
@@ -59,32 +50,6 @@ const UserManagementTable = ({users}: { users: User[] }) => {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
-
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-    const [selectedUser, setSelectedUser] = useState<User | null>(null)
-
-
-    const handleDeleteUser = (user: User) => {
-        setSelectedUser(user)
-        setIsDeleteModalOpen(true)
-    }
-
-    const confirmDelete = () => {
-        if (selectedUser) {
-            console.log("Deleting event:", selectedUser.id)
-            deleteUser(selectedUser.id).then((res) => {
-                if (res.success) {
-                    toast.success(res.message)
-                } else {
-                    toast.error(res.message)
-                }
-            }).catch((error) => {
-                console.log(error)
-                toast.error("Failed to delete user")
-            })
-        }
-        setIsDeleteModalOpen(false)
-    }
 
 
     const columns: ColumnDef<User>[] = [
@@ -155,33 +120,14 @@ const UserManagementTable = ({users}: { users: User[] }) => {
             accessorKey: "action",
             header: "Action",
             cell: ({row}) => {
+                const id = row.original.id; // Get the id of the current row
                 return (
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteUser(row.original)}
-                        className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
+                    <span
+                        onClick={() => handleDelete(id)}
+                        className='cursor-pointer text-red-500 pl-2'
                     >
-                        <span className="sr-only">Delete</span>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-trash-2"
-                        >
-                            <path d="M3 6h18"/>
-                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                            <line x1="10" x2="10" y1="11" y2="17"/>
-                            <line x1="14" x2="14" y1="11" y2="17"/>
-                        </svg>
-                    </Button>
+            <Trash2/>
+          </span>
                 );
             },
         },
@@ -206,9 +152,35 @@ const UserManagementTable = ({users}: { users: User[] }) => {
         },
     });
 
+    // handle Delete button
+    const handleDelete = async (id: string) => {
+        try {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await deleteUser(id);
+                    toast.success("User deleted successfully");
+                }
+            });
+        } catch (err: unknown) {
+            toast.error(
+                err instanceof Error ? err.message : "An unknown error occurred"
+            );
+        }
+    };
+
     if (users.length === 0) {
         return (
-            <NoDataMessage title={"No users available"} description={"There is no users to display at the moment"} icon={<Users/>}/>
+            <div className='flex justify-center items-center'>
+                <h1 className='text-3xl font-bold text-red-500'>No users found</h1>
+            </div>
         );
     }
 
@@ -324,28 +296,6 @@ const UserManagementTable = ({users}: { users: User[] }) => {
                     </Button>
                 </div>
             </div>
-
-            <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Confirm Deletion</DialogTitle>
-                        <DialogDescription>
-                            Are you sure you want to delete user <Badge
-                            className={"rounded-sm"}>{selectedUser?.name}</Badge> ?
-                            <br/>
-                            This action cannot be undone.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
-                            Cancel
-                        </Button>
-                        <Button variant="destructive" onClick={confirmDelete}>
-                            Delete
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 };
