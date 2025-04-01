@@ -20,6 +20,49 @@ import {Separator} from "@/components/ui/separator"
 import {useRouter} from "next/navigation";
 import {createEvent} from "@/actions/eventActions";
 
+export const eventCategories = [
+    {
+        label: "Music Festivals",
+        value: "music",
+    },
+    {
+        label: "Food & Drink",
+        value: "food",
+    },
+    {
+        label: "Art Exhibitions",
+        value: "art",
+    },
+    {
+        label: "Workshops & Classes",
+        value: "workshops",
+    },
+    {
+        label: "Sports Events",
+        value: "sports",
+    },
+    {
+        label: "Networking",
+        value: "networking",
+    },
+    {
+        label: "Cultural Festivals",
+        value: "cultural",
+    },
+    {
+        label: "Movies",
+        value: "movies",
+    }
+]
+export const filterCategories = [
+    {
+        label: "All",
+        value: "all",
+    },
+    ...eventCategories,
+]
+
+
 export default function EventForm() {
     const router = useRouter()
     const form = useForm<z.infer<typeof newEventSchema>>({
@@ -47,7 +90,7 @@ export default function EventForm() {
             console.log(response)
             if (response.success) {
                 toast.success(response.message)
-                router.push("/dashboard")
+                router.push("/dashboard/event-management")
             }
         } catch (error: any) {
             console.error("Form submission error", error)
@@ -103,13 +146,11 @@ export default function EventForm() {
                                                         <SelectValue placeholder="Select category"/>
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="conference">Conference</SelectItem>
-                                                        <SelectItem value="workshop">Workshop</SelectItem>
-                                                        <SelectItem value="seminar">Seminar</SelectItem>
-                                                        <SelectItem value="concert">Concert</SelectItem>
-                                                        <SelectItem value="exhibition">Exhibition</SelectItem>
-                                                        <SelectItem value="sports">Sports</SelectItem>
-                                                        <SelectItem value="other">Other</SelectItem>
+                                                        {eventCategories.map((category) => (
+                                                            <SelectItem key={category.value} value={category.value}>
+                                                                {category.label}
+                                                            </SelectItem>
+                                                        ))}
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>

@@ -77,3 +77,44 @@ export async function deleteEvent(id: string) {
         throw new Error("Failed to delete event")
     }
 }
+
+export async function getSearchedEvents(
+    search: string | null,
+    category: string | null,
+    sort: string | null,
+) {
+
+    const where: any = {};
+    const orderBy: any = []
+
+
+    if (category && category !== "all") {
+        where.category = category;
+    }
+    if (search) {
+        where.OR = [
+            {title: {contains: search, mode: "insensitive"}},
+            {description: {contains: search, mode: "insensitive"}}
+        ]
+    }
+    switch (sort) {
+        case "price_low":
+            orderBy.push({ticketPrice: "asc"});
+            break;
+        case "price_high":
+            orderBy.push({ticketPrice: "desc"});
+            break;
+        case "popular":
+            orderBy.push({createdAt: "desc"});
+            break;
+        case "latest":
+        default:
+            orderBy.push({createdAt: "desc"});
+            break;
+    }
+
+    return await prisma.event.findMany({
+        where,
+        orderBy
+    })
+}

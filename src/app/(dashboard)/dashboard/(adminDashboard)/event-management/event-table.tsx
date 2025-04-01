@@ -108,7 +108,7 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
 
     const data: IEvent[] = eventData
 
-    const formatDate = (date: Date) => {
+     const formatDate = (date: Date) => {
         return date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",

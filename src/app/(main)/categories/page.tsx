@@ -1,98 +1,35 @@
- "use client";
-
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import Searching from "@/components/AllCategories/Searching";
-import CategoryTags from "@/components/AllCategories/CategoryTags";
-import SortingDropdown from "@/components/AllCategories/SortingDropdown";
 import EventCards from "@/components/AllCategories/EventCards";
-import { IoIosArrowForward } from "react-icons/io";
-import eventData from "@/data/events.json";
-import RecentView from "@/components/AllCategories/RecentView";
-import FAQ from "@/components/AllCategories/FAQ";
+import {getSearchedEvents} from "@/actions/eventActions";
+import {NoDataMessage} from "@/components/no-data";
+import {MusicIcon} from "lucide-react";
 
-// Define Event Type
-interface Event {
-  title: string;
-  image: string;
-  category: string;
-  location: string;
-  duration: string;
-  forWhom: string;
-  price: string;
-  reviews: number;
-  rating: number;
-}
+export default async function CategoriesPage({
+                                                 searchParams,
+                                             }: {
+    searchParams: Promise<{
+        search: string | null,
+        category: string | null,
+        sort: string | null
+    }>
+}) {
 
-// Define Filters
-interface Filters {
-  location?: string;
-  forWhom?: string;
-  category?: string;
-  price?: string;
-}
+    const search = (await searchParams).search || null
+    const category = (await searchParams).category || "all"
+    const sort = (await searchParams).sort || "latest"
 
-export default function Page() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [filters, setFilters] = useState<Filters>({});
+    const events = await getSearchedEvents(search, category, sort);
 
-  // Extract filters from URL on page load
-  useEffect(() => {
-    const newFilters: Filters = {};
-    searchParams.forEach((value, key) => {
-      newFilters[key as keyof Filters] = value;
-    });
-    setFilters(newFilters);
-  }, [searchParams]);
+    if (events.length === 0) {
+        return (
+            <NoDataMessage
+                icon={<MusicIcon/>}
+                title={"No events found"}
+                description={
+                    "No events match your search criteria. Try adjusting your search terms."
+                }
+            />
+        );
+    }
 
-  // Function to update filters and URL
-  const updateFilters = (newFilters: Filters) => {
-    setFilters(newFilters);
-    
-    const params = new URLSearchParams();
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value) params.set(key, value);
-    });
-
-    // Update URL dynamically without a page refresh
-    router.push(`?${params.toString()}`);
-  };
-
-  // Filter events dynamically based on URL filters
-  const filteredEvents = eventData.events.filter((event) =>
-    Object.entries(filters).every(([key, value]) =>
-      value ? event[key as keyof Event] === value : true
-    )
-  );
-
-  return (
-    <div className="w-11/12 mx-auto">
-      {/* Search Section */}
-      <div className="pt-8">
-        <Searching updateFilters={updateFilters} />
-      </div>
-
-      {/* Page Header */}
-      <div className="mt-6 flex items-center gap-2">
-        <IoIosArrowForward className="text-primary text-lg" />
-        <h5 className="text-gray-600 text-sm">Search the site</h5>
-      </div>
-
-      <h1 className="text-3xl font-bold mt-2">HERE’s What We Found</h1>
-
-      {/* Filters & Sorting */}
-      <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <CategoryTags />
-        <SortingDropdown />
-      </div>
-
-      {/* Event Cards Section */}
-      <EventCards events={filteredEvents} />
-      {/* when searching params then the data store backend then recentview page show */}
-      <RecentView></RecentView>
-       {/* faq section adding intigate mailgun/nodemailer for next day */}
-       <FAQ></FAQ>
-    </div>
-  );
+    return <EventCards events={events}/>;
 }

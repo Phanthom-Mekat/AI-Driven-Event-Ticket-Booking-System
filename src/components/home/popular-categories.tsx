@@ -20,7 +20,7 @@ export default function PopularCategories() {
                 {eventCategories.map((category, i) => (
                     <Link
                         key={i}
-                        href={`/events/${category.slug}`}
+                        href={`/categories/${category.slug}`}
                         className={
                             i === 0
                                 ? "sm:col-span-2 md:col-span-1 lg:col-span-1"
@@ -83,35 +83,35 @@ const eventCategories = [
         description: "From electronic dance to indie rock, experience the best music festivals.",
         image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&h=300&fit=crop",
         eventCount: 120,
-        slug: "music-festivals",
+        slug: "music",
     },
     {
         title: "Food & Drink",
         description: "Culinary experiences, wine tastings, and food festivals for every palate.",
         image: "https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=400&auto=format&fit=crop",
         eventCount: 85,
-        slug: "food-drink",
+        slug: "food",
     },
     {
         title: "Art Exhibitions",
         description: "Discover contemporary and classical art from renowned and emerging artists.",
         image: "https://images.unsplash.com/photo-1530263131525-1c1d26feaa60?q=80&w=2071&auto=format&fit=crop",
         eventCount: 64,
-        slug: "art-exhibitions",
+        slug: "art",
     },
     {
         title: "Workshops & Classes",
         description: "Learn new skills, from cooking to crafting, with expert-led workshops.",
         image: "https://images.unsplash.com/photo-1558008258-3256797b43f3?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         eventCount: 150,
-        slug: "workshops-classes",
+        slug: "workshops",
     },
     {
         title: "Sports Events",
         description: "Catch live sports action from local matches to major tournaments.",
         image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=400&h=300&fit=crop",
         eventCount: 92,
-        slug: "sports-events",
+        slug: "sports",
     },
     {
         title: "Networking",
@@ -125,7 +125,7 @@ const eventCategories = [
         description: "Celebrate diversity with cultural festivals showcasing traditions from around the world.",
         image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=400&h=300&fit=crop",
         eventCount: 110,
-        slug: "cultural-festivals",
+        slug: "cultural",
     },
     {
         title: "Movies",
