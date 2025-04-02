@@ -32,7 +32,7 @@ export default function SearchFilter() {
     }
 
     return (
-        <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
+        <div className="w-full px-4 py-8 sm:px-6">
             <div className="mx-auto max-w-7xl">
                 <div className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-black/5">
                     <div className="p-6 sm:p-8">
