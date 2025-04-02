@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import {IEvent} from "@/app/(dashboard)/dashboard/(adminDashboard)/event-management/event-table";
 import {revalidatePath} from "next/cache";
 import {auth} from "@/auth";
+import { Prisma } from "@prisma/client";
+
 
 
 interface EventFormData {
@@ -84,8 +86,8 @@ export async function getSearchedEvents(
     sort: string | null,
 ) {
 
-    const where: any = {};
-    const orderBy: any = []
+    const where: Prisma.EventWhereInput = {};
+    const orderBy: Prisma.EventOrderByWithRelationInput[] = []
 
 
     if (category && category !== "all") {

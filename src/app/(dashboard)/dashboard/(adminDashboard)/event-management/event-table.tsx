@@ -1,3 +1,5 @@
+//@typescript-eslint/no-explicit-any
+
 "use client"
 import {useState} from "react"
 import type React from "react"
@@ -83,12 +85,14 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
             try {
                 const response = await deleteEvent(selectedEvent.id)
                 toast.success(response.message)
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.log(error)
-                toast.error(error.message)
+                if (error instanceof Error) {
+                    toast.error(error.message)
+                }
             }
+            setIsDeleteModalOpen(false)
         }
-        setIsDeleteModalOpen(false)
     }
 
     const submitEditForm = async (e: React.FormEvent) => {
@@ -97,9 +101,11 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
             try {
                 const response = await updateEvent(selectedEvent.id, selectedEvent)
                 toast.success(response.message)
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.log(error)
-                toast.error(error.message)
+                if (error instanceof Error){
+                    toast.error(error.message)
+                }
             }
 
         }
@@ -108,7 +114,7 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
 
     const data: IEvent[] = eventData
 
-     const formatDate = (date: Date) => {
+    const formatDate = (date: Date) => {
         return date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
@@ -293,7 +299,7 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
                                     <DropdownMenuCheckboxItem
                                         key={column.id}
                                         checked={column.getIsVisible()}
-                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                        onCheckedChange={(value) => column.toggleVisibility(value)}
                                     >
                                         {column.id}
                                     </DropdownMenuCheckboxItem>
@@ -364,7 +370,8 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
                     <DialogHeader>
                         <DialogTitle>Confirm Deletion</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete the event <Badge className={"rounded-sm"}>{selectedEvent?.title}</Badge> ? <br/> This action
+                            Are you sure you want to delete the event <Badge
+                            className={"rounded-sm"}>{selectedEvent?.title}</Badge> ? <br/> This action
                             cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
@@ -498,4 +505,3 @@ export const EventManagementTable = ({eventData}: { eventData: IEvent[] }) => {
         </div>
     )
 }
-

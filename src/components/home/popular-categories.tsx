@@ -20,7 +20,7 @@ export default function PopularCategories() {
                 {eventCategories.map((category, i) => (
                     <Link
                         key={i}
-                        href={`/categories/${category.slug}`}
+                        href={`/events?category=${category.slug}`}
                         className={
                             i === 0
                                 ? "sm:col-span-2 md:col-span-1 lg:col-span-1"

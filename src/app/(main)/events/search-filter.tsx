@@ -19,7 +19,7 @@ export default function SearchFilter() {
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
             const params = new URLSearchParams(window.location.search)
-            router.replace(`/categories?${params.toString()}`)
+            router.replace(`/events?${params.toString()}`)
         }, 300)
 
         return () => clearTimeout(debounceTimer)
@@ -28,7 +28,7 @@ export default function SearchFilter() {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         const params = new URLSearchParams()
-        router.replace(`/categories?${params.toString()}`)
+        router.replace(`/events?${params.toString()}`)
     }
 
     return (
