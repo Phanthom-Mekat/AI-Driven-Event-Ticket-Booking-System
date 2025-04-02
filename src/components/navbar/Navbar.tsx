@@ -8,8 +8,7 @@ import {
   Menu, 
   Ticket, 
   Home, 
-  Layers, 
-  Calendar, 
+  Calendar,
   User, 
   X,
   LayoutDashboard,
@@ -43,15 +42,13 @@ import { useSession } from 'next-auth/react';
 
 const Navbar: React.FC = () => {
   const { data: session } = useSession();
-console.log(session, "session data");
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Navigation menu items
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/all-event', label: 'Events', icon: Calendar },
-    { href: '/categories', label: 'Categories', icon: Layers },
+    { href: '/events', label: 'Events', icon: Calendar },
     { href: '/my-ticket', label: 'My Tickets', icon: Ticket }
   ];
 

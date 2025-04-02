@@ -4,7 +4,10 @@ import { Button } from "../ui/button";
 import { FaHeart } from "react-icons/fa";
 import eventData from "../../data/events.json" 
 import { useRouter } from "next/navigation";
+
+
 export default function RecentView() {
+
    const router = useRouter();
   
     // Handler function for redirecting to event details page

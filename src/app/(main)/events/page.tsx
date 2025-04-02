@@ -3,7 +3,7 @@ import {getSearchedEvents} from "@/actions/eventActions";
 import {NoDataMessage} from "@/components/no-data";
 import {MusicIcon} from "lucide-react";
 
-export default async function CategoriesPage({
+export default async function EventsPage({
                                                  searchParams,
                                              }: {
     searchParams: Promise<{

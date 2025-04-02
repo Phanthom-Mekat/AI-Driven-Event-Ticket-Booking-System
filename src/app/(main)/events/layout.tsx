@@ -1,4 +1,4 @@
-import SearchFilter from "@/app/(main)/categories/search-filter";
+import SearchFilter from "@/app/(main)/events/search-filter";
 
 export default function CategoriesLayout({children}: { children: React.ReactNode }) {
     return (
