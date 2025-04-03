@@ -1,4 +1,6 @@
 "use client";
+import AdminDashboard from "@/components/dashboard/admindashboard/AdminDashboard";
+import UserDashboard from "@/components/dashboard/userdashboard/UserDashboard";
 import { useSession } from "next-auth/react";
 import React from "react";
 
@@ -9,11 +11,11 @@ const DashboardPage = () => {
   const userRole: string = "admin";
   return (
     <div className='w-full p-6'>
-      <h1 className='text-2xl font-bold'>Dashboard</h1>
+      <h1 className='text-2xl font-bold pb-4'>Dashboard</h1>
       {userRole === "admin" ? (
-        <div>Admin Dashboard</div>
+        <AdminDashboard/>
       ) : userRole === "user" ? (
-        <div>User Dashboard</div>
+        <UserDashboard/>
       ) : null}{" "}
     </div>
   );
