@@ -2,10 +2,11 @@ import EventCards from "@/components/AllCategories/EventCards";
 import {getSearchedEvents} from "@/actions/eventActions";
 import {NoDataMessage} from "@/components/no-data";
 import {MusicIcon} from "lucide-react";
+import SearchFilter from "@/app/(main)/events/search-filter";
 
 export default async function EventsPage({
-                                                 searchParams,
-                                             }: {
+                                             searchParams,
+                                         }: {
     searchParams: Promise<{
         search: string | null,
         category: string | null,
@@ -31,5 +32,13 @@ export default async function EventsPage({
         );
     }
 
-    return <EventCards events={events}/>;
+    return (
+        <>
+            <SearchFilter/>
+            <div className={"max-w-7xl mx-auto px-4 sm:px-6"}>
+                <EventCards events={events}/>
+            </div>
+
+        </>
+    );
 }
