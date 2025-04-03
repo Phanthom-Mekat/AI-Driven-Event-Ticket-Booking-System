@@ -23,7 +23,7 @@ export const POST = async (request: NextRequest) => {
                 },
             ],
             mode: "payment",
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/categories`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/events`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/`,
         });
 
