@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  BadgeDollarSign,
   CalendarClock,
   CheckCircle,
   LayoutDashboard,
@@ -49,18 +50,23 @@ const navData = {
   userNav: [
     {
       title: "My Tickets",
-      url: "/my-ticket",
+      url: "/dashboard/my-ticket",
       icon: Ticket,
     },
     {
       title: "Manage Tickets",
-      url: "/manage-ticket",
+      url: "/dashboard/manage-ticket",
       icon: Settings2,
     },
     {
       title: "Ticket Validation",
-      url: "/ticket-validation",
+      url: "/dashboard/ticket-validation",
       icon: CheckCircle,
+    },
+    {
+      title: "Payment History",
+      url: "/dashboard/payment-history",
+      icon: BadgeDollarSign,
     },
   ],
   commonNav: [
