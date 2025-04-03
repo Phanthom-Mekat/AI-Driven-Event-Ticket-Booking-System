@@ -5,6 +5,12 @@ import {FaHeart} from "react-icons/fa"
 import {MapPin} from "lucide-react"
 import {SlCalender} from "react-icons/sl"
 import Link from "next/link"
+import axios from "axios";
+
+import { loadStripe } from "@stripe/stripe-js";
+import { useState } from "react"
+// Load Stripe
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 export interface IEvent {
     id: string
@@ -38,6 +44,27 @@ const formatDate = (date: Date) => {
 }
 
 export default function EventCards({events = []}: EventCardsProps) {
+    const [loading, setLoading] = useState(false);
+      const checkoutButton = async (event:IEvent) => {
+    
+        setLoading(true);
+        try {
+          const { data } = await axios.post("/api/payment", {
+            title: event.title,
+            description:event.description,
+            price: event.ticketPrice.toString(),
+          });
+    
+          const stripe = await stripePromise;
+          await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+        } catch (error) {
+          console.error("Payment error:", error);
+          alert("Failed to initiate payment. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+    
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-6">
             {events.length > 0 ? (
@@ -88,9 +115,9 @@ export default function EventCards({events = []}: EventCardsProps) {
                             </div>
                             <p className="text-lg md:text-xl font-bold mt-2 text-center text-primary">${event.ticketPrice}</p>
                             <div className="grid grid-cols-4 gap-2 mt-3">
-                                <Button
+                                <Button onClick={()=>checkoutButton(event)} disabled={loading}
                                     className="bg-[#902B27] hover:bg-[#7a2522] text-white py-1.5 px-2 h-auto text-xs md:text-sm rounded-lg col-span-3 cursor-pointer">
-                                    Book Now
+                                     Book Now 
                                 </Button>
                                 <Button
                                     asChild
