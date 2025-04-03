@@ -54,11 +54,6 @@ const navData = {
       icon: Ticket,
     },
     {
-      title: "Manage Tickets",
-      url: "/dashboard/manage-ticket",
-      icon: Settings2,
-    },
-    {
       title: "Ticket Validation",
       url: "/dashboard/ticket-validation",
       icon: CheckCircle,
@@ -82,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const pathname = usePathname();
   // const userRole: string = session?.user?.role;
-  const userRole: string = "admin";
+  const userRole: string = "user";
 
   // Redirect to "/" if user is not authenticated
   React.useEffect(() => {
