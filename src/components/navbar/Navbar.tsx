@@ -12,7 +12,9 @@ import {
   User, 
   X,
   LayoutDashboard,
-  LogOut
+  LogOut,
+  Info,
+  MessageSquare
 } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -49,7 +51,9 @@ const Navbar: React.FC = () => {
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/events', label: 'Events', icon: Calendar },
-    { href: '/my-ticket', label: 'My Tickets', icon: Ticket }
+    { href: '/my-ticket', label: 'My Tickets', icon: Ticket },
+    { href:'about' , label: 'About us', icon: Info },
+    { href: '/contact', label: 'Contact', icon: MessageSquare  },
   ];
 
   const profileDropdownItems = [
