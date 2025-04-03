@@ -1,63 +1,47 @@
-"use client";
+"use client"
 import { NoDataMessage } from "@/components/no-data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { ChevronDown, History } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable, VisibilityState } from "@tanstack/react-table";
+import { ChevronDown, Ticket } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
-type HistoryItem = {
+
+type TicketItem = {
   id: string;
   eventName: string;
   eventPrice: string;
+  date: string;
+  venue: string;
   paymentStatus: string;
   confirmationStatus: string;
 };
 
-type Props = {
-  historyData: HistoryItem[];
+type Prop = {
+  tickets: TicketItem[];
 };
 
-const PaymentHistoryTable = ({historyData}:Props) => {
+const MyTicketTable = ({ tickets }:Prop) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  //
-  const [data, setData] = useState<HistoryItem[]>(historyData);
+  
+  const [data, setData] = useState<TicketItem[]>(tickets);
 
-    useEffect(() => {
-        setData(historyData);
-    }, [historyData]);
+  useEffect(()=>{
+    setData(tickets);
+  },[tickets]);
 
-  const columns: ColumnDef<HistoryItem>[] = [
+  // Colum Def
+  const columns: ColumnDef<TicketItem>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -82,25 +66,84 @@ const PaymentHistoryTable = ({historyData}:Props) => {
     },
     {
       accessorKey: "eventName",
-      header: "Event Name",
-      cell: ({ row }) => <div>{row.getValue("eventName")}</div>,
+      header: "event Name",
+      cell: ({ row }) => <div>{row.original.eventName}</div>,
     },
     {
       accessorKey: "eventPrice",
       header: "Event Price",
-      cell: ({ row }) => {
-        return <div>{row.original.eventPrice}$</div>;
-      },
+      cell: ({ row }) => <div>{row.original.eventPrice}$</div>,
+    },
+    {
+      accessorKey: "date",
+      header: "Date",
+      cell: ({ row }) => <div>{row.getValue("date")}</div>,
     },
     {
       accessorKey: "paymentStatus",
       header: "Payment Status",
-      cell: ({ row }) => <div>{row.getValue("paymentStatus")}</div>,
+      cell: ({ row }) => {
+        const id = row.original.id;
+        return (
+          <div>
+            {row.original.paymentStatus === "Paid" ? (
+              <div className='bg-green-500 text-black w-12 text-center py-1 rounded-sm cursor-not-allowed'>
+                Paid
+              </div>
+            ) : (
+              <Link
+                href={`/dashboard/payment/${id}`}
+                className='bg-primary text-white dark:text-black text-center py-1 px-3.5 rounded-sm cursor-pointer'
+              >
+                Pay
+              </Link>
+            )}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "confirmationStatus",
       header: "Confirmation Status",
       cell: ({ row }) => <div>{row.getValue("confirmationStatus")}</div>,
+    },
+    {
+      accessorKey: "cancel",
+      header: "Cancel Event",
+      cell: ({ row }) => {
+        const id = row.original?.id;
+        return (
+          <div>
+            {row.original?.paymentStatus !== "Paid" ? (
+              <Button onClick={() => handleDelete(id)} variant={"destructive"}>
+                Cancel
+              </Button>
+            ) : (
+              <div className='cursor-not-allowed'>N/A</div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "download",
+      header: "Download Ticket",
+      cell: ({ row }) => {
+        return (
+          <div>
+            {row.original.paymentStatus === "Paid" ? (
+              <Link
+                href={`/dashboard/ticket/${row.original.id}`}
+                className='bg-primary text-white dark:text-black text-center py-1 px-3.5 rounded-sm cursor-pointer'
+              >
+                Download
+              </Link>
+            ) : (
+              <div className='cursor-not-allowed'>N/A</div>
+            )}
+          </div>
+        );
+      },
     },
   ];
 
@@ -123,18 +166,41 @@ const PaymentHistoryTable = ({historyData}:Props) => {
     },
   });
 
+  // handle Delete button
+  const handleDelete = async (id: string) => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //   delete api call here
+          alert("Delete API call here");
+        }
+      });
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
   if (data.length === 0) {
     return (
       <NoDataMessage
-        title={"No history available"}
-        description={"There is no history to display at the moment"}
-        icon={<History />}
+        title={"No Tickets available"}
+        description={"There is no tickets to display at the moment"}
+        icon={<Ticket />}
       />
     );
   }
+
   return (
     <div className='w-full p-6'>
-      <h1 className='text-2xl font-bold pb-4'>Payment History</h1>
+      <h1 className='text-2xl font-bold pb-4'>My Tickets</h1>
       <div className='flex gap-4 items-center py-4'>
         <Input
           placeholder='Search by eventName...'
@@ -250,4 +316,4 @@ const PaymentHistoryTable = ({historyData}:Props) => {
   );
 };
 
-export default PaymentHistoryTable;
+export default MyTicketTable;
