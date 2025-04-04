@@ -15,6 +15,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
     callbacks: {
         session({session, user}) {
             session.user.id = user.id
+            //@ts-ignore
+            session.user.role = user.role as string
             return session
         },
     }

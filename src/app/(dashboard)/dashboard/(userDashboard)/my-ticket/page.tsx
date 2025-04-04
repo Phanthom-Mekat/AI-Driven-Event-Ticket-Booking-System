@@ -1,33 +1,22 @@
 import React from 'react';
 import MyTicketTable from './my-ticket-table';
+import prisma from "@/lib/prisma";
 
-const fakeTickets = [
-  {
-    id: "1",
-    eventName: "Concert A",
-    eventPrice: "50",
-    date: "2025-04-10",
-    venue: "Stadium X",
-    paymentStatus: "Paid",
-    confirmationStatus: "Confirmed",
-  },
-  {
-    id: "2",
-    eventName: "Tech Conference",
-    eventPrice: "100",
-    date: "2025-05-15",
-    venue: "Convention Center",
-    paymentStatus: "Pending",
-    confirmationStatus: "Pending",
-  },
-];
+export default async function MyTicket() {
 
-const MyTicket = () => {
+    const tickets = await prisma.booking.findMany({
+        include: {
+            payment: true,
+            user: true,
+            event : true
+        }
+    });
+
+
     return (
-      <>
-        <MyTicketTable tickets={fakeTickets} />
-      </>
+        <>
+            <MyTicketTable bookings={tickets}/>
+        </>
     );
 };
 
-export default MyTicket;

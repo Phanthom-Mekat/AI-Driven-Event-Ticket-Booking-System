@@ -1,7 +1,7 @@
-import React from 'react';
-
-const ticketValidation = () => {
-    return <div>ticketValidation</div>;
-};
-
-export default ticketValidation;
+export default function TicketValidationPage() {
+    return (
+        <>
+            <h1>Validation</h1>
+        </>
+    )
+}
