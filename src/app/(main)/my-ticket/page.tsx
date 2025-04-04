@@ -3,7 +3,8 @@ import React from 'react';
 const page = () => {
     return (
         <div>
-            <h1>My ticket</h1>
+            {/* <MainChatBot/> */}
+            f
         </div>
     );
 };
