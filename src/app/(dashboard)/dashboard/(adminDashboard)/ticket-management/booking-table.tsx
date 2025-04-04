@@ -120,7 +120,7 @@ export default function BookingList({bookings}: BookingListProps) {
             },
         },
         {
-            accessorKey: "event.title",
+            accessorKey: "eventTitle",
             header: ({column}) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -257,7 +257,7 @@ export default function BookingList({bookings}: BookingListProps) {
             <div className="flex items-center py-4 justify-between">
                 <Input
                     placeholder="Filter events..."
-                    value={(table.getColumn("event.title")?.getFilterValue() as string) ?? ""}
+                    value={(table.getColumn("eventTitle")?.getFilterValue() as string) ?? ""}
                     onChange={(event) => table.getColumn("event.title")?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />

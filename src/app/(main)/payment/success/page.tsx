@@ -28,6 +28,7 @@ export default function PaymentSuccessPage() {
     const [error, setError] = useState<string | null>(null)
 
     const sessionId = searchParams.get("session_id")
+    console.log(sessionId)
 
     useEffect(() => {
         if (!sessionId) {
@@ -150,7 +151,7 @@ export default function PaymentSuccessPage() {
                         <Link href="/events">Browse More Events</Link>
                     </Button>
                     <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                        <Link href={"/dashboard/bookings"}>View My Bookings</Link>
+                        <Link href={"/dashboard/my-ticket"}>View Tickets</Link>
                     </Button>
                 </CardFooter>
             </Card>
