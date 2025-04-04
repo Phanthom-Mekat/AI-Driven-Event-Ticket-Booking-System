@@ -20,24 +20,19 @@ export default async function EventsPage({
 
     const events = await getSearchedEvents(search, category, sort);
 
-    if (events.length === 0) {
-        return (
-            <NoDataMessage
-                icon={<MusicIcon/>}
-                title={"No events found"}
-                description={
-                    "No events match your search criteria. Try adjusting your search terms."
-                }
-            />
-        );
-    }
 
     return (
         <>
             <SearchFilter/>
-            <div className={"max-w-7xl mx-auto px-4 sm:px-6"}>
-                <EventCards events={events}/>
-            </div>
+            {events.length === 0 ?
+                <NoDataMessage icon={<MusicIcon/>} title={"No events found"}
+                               description={"No events match your search criteria. Try adjusting your search terms."}/>
+                :
+
+                <div className={"max-w-7xl mx-auto px-4 sm:px-6"}>
+                    <EventCards events={events}/>
+                </div>
+            }
 
         </>
     );

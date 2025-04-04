@@ -8,17 +8,19 @@ import {SlCalender} from "react-icons/sl"
 import {IEvent} from "@/components/AllCategories/EventCards";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {useRouter} from "next/navigation";
-import { useState } from "react"
+import {useState} from "react"
 import axios from "axios";
 
-import { loadStripe } from "@stripe/stripe-js";
+import {loadStripe} from "@stripe/stripe-js";
+import {User} from "next-auth";
 
 // Load Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 interface EventDetailsPageProps {
     event: IEvent,
-    organizer: IOrganizer
+    organizer: IOrganizer,
+    currentUser : User
 }
 
 interface IOrganizer {
@@ -38,7 +40,7 @@ const formatDate = (date: Date) => {
     })
 }
 
-export default function EventDetails({event, organizer}: EventDetailsPageProps) {
+export default function EventDetails({event, organizer, currentUser}: EventDetailsPageProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const displayEvent = event
@@ -52,26 +54,28 @@ export default function EventDetails({event, organizer}: EventDetailsPageProps) 
     const duration =
         Math.round((displayEvent.endDate.getTime() - displayEvent.startDate.getTime()) / (1000 * 60 * 60)) + " Hours"
 
-     // Checkout Button Handler
-  const checkoutButton = async () => {
+    // Checkout Button Handler
+    const checkoutButton = async () => {
 
-    setLoading(true);
-    try {
-      const { data } = await axios.post("/api/payment", {
-        title: displayEvent.title,
-        description:displayEvent.description,
-        price: displayEvent.ticketPrice.toString(),
-      });
+        setLoading(true);
+        try {
+            const {data} = await axios.post("/api/payment", {
+                eventId: displayEvent.id,
+                title: displayEvent.title,
+                description: displayEvent.description,
+                price: displayEvent.ticketPrice.toString(),
+                email: currentUser.email,
+            });
 
-      const stripe = await stripePromise;
-      await stripe?.redirectToCheckout({ sessionId: data.sessionId });
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Failed to initiate payment. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+            const stripe = await stripePromise;
+            await stripe?.redirectToCheckout({sessionId: data.sessionId});
+        } catch (error) {
+            console.error("Payment error:", error);
+            alert("Failed to initiate payment. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8">
@@ -112,8 +116,8 @@ export default function EventDetails({event, organizer}: EventDetailsPageProps) 
                         <p className="text-lg sm:text-xl md:text-2xl font-bold">${displayEvent.ticketPrice}</p>
                     </div>
                     <Button onClick={checkoutButton} disabled={loading}
-                        className="bg-[#902b27] hover:bg-[#7a2522] w-full text-sm sm:text-base py-1 sm:py-2">
-                         {loading ? "Loading..." : "Book Now"}</Button>
+                            className="bg-[#902b27] hover:bg-[#7a2522] w-full text-sm sm:text-base py-1 sm:py-2">
+                        {loading ? "Loading..." : "Book Now"}</Button>
                 </div>
             </div>
 
@@ -258,8 +262,8 @@ export default function EventDetails({event, organizer}: EventDetailsPageProps) 
 
             <div className="mt-8 sm:mt-12 flex justify-center">
                 <Button onClick={checkoutButton} disabled={loading}
-                    className="bg-[#902b27] cursor-pointer hover:bg-[#7a2522] px-8 sm:px-12 py-2 sm:py-6 text-base sm:text-lg w-full sm:w-auto">
-                     {loading ? "Loading..." : "Book Now"}
+                        className="bg-[#902b27] cursor-pointer hover:bg-[#7a2522] px-8 sm:px-12 py-2 sm:py-6 text-base sm:text-lg w-full sm:w-auto">
+                    {loading ? "Loading..." : "Book Now"}
                 </Button>
             </div>
         </div>
