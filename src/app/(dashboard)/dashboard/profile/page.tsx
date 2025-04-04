@@ -22,11 +22,15 @@ import {
   SquarePen,
   Upload,
   User,
+  ShieldCheck,
 } from "lucide-react";
 import Image from "next/image";
-import { UserType } from "@/utils/userType";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
+// Update schema to match the user properties from Prisma
 const updateProfileSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -39,8 +43,23 @@ const updateProfileSchema = z.object({
 
 type UpdateProfileFormValues = z.infer<typeof updateProfileSchema>;
 
+// Extended User type based on your Prisma model
+type ExtendedUserType = {
+  id: string;
+  name: string | null;
+  email: string;
+  emailVerified?: Date | null;
+  image?: string | null;
+  role: "USER" | "ADMIN" | "ORGANIZER";
+  contact?: string;
+  profession?: string;
+  about?: string;
+  address?: string;
+};
+
 const Profile = () => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const { data: session, status } = useSession();
+  const [user, setUser] = useState<ExtendedUserType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [toggle, setToggle] = useState(true);
@@ -50,53 +69,108 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    // Simulate loading the user data
-    const fetchUserData = async () => {
-      // Replace this with actual API request
-      const fetchedUserData: UserType = {
-        _id: "123456789", // Added _id property
-        name: "John Doe",
-        email: "johndoe@example.com",
-        contact: "123-456-7890",
-        profession: "Software Engineer",
-        about: "I am a passionate software engineer.",
-        address: "123 Main Street, City",
-        image: "/images/profile.jpg",
+    // Use the session data instead of simulated data
+    if (status === "authenticated" && session?.user) {
+      // Fetch additional user details if needed
+      const fetchUserDetails = async () => {
+        try {
+          const response = await fetch("/api/users/profile");
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+            setImagePreview(userData.image || "/images/default-avatar.png");
+
+            // Set form default values after fetching user data
+            form.reset({
+              name: userData.name || "",
+              email: userData.email,
+              contact: userData.contact || "",
+              profession: userData.profession || "",
+              about: userData.about || "",
+              address: userData.address || "",
+            });
+          } else {
+            // Fallback to session data if API fails
+            const sessionUser = session.user as ExtendedUserType;
+            setUser(sessionUser);
+            setImagePreview(sessionUser.image || "/images/default-avatar.png");
+            
+            form.reset({
+              name: sessionUser.name || "",
+              email: sessionUser.email,
+              contact: sessionUser.contact || "",
+              profession: sessionUser.profession || "",
+              about: sessionUser.about || "",
+              address: sessionUser.address || "",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          toast.error("Failed to load user data");
+        }
       };
-      setUser(fetchedUserData);
-      setImagePreview(fetchedUserData.image);
 
-      // Set form default values after fetching user data
-      form.reset({
-        name: fetchedUserData.name,
-        email: fetchedUserData.email,
-        contact: fetchedUserData.contact,
-        profession: fetchedUserData.profession,
-        about: fetchedUserData.about,
-        address: fetchedUserData.address,
-      });
-    };
+      fetchUserDetails();
+    }
+  }, [session, status, form]);
 
-    fetchUserData();
-  }, [form]);
+  // Show loading state while session is loading
+  if (status === "loading") {
+    return <div className="flex justify-center items-center h-96">Loading...</div>;
+  }
+
+  // If not authenticated, show message
+  if (status === "unauthenticated") {
+    return <div className="flex justify-center items-center h-96">Please sign in to view your profile</div>;
+  }
 
   // Add null checks for user in the render section
   if (!user) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center h-96">Loading profile data...</div>;
   }
 
   const onSubmit = async (data: UpdateProfileFormValues) => {
     setIsSubmitting(true);
-    console.log(data);
+    
+    try {
+      const response = await fetch("/api/users/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    // After form submission, you can update the user data as needed
-    setIsSubmitting(false);
+      if (response.ok) {
+        toast.success("Profile updated successfully");
+        setToggle(true);
+      } else {
+        toast.error("Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("An error occurred while updating profile");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  // Function to get role badge color
+  const getRoleBadgeColor = (role: string) => {
+    switch (role) {
+      case "ADMIN":
+        return "bg-red-500 hover:bg-red-600";
+      case "ORGANIZER":
+        return "bg-blue-500 hover:bg-blue-600";
+      default:
+        return "bg-green-500 hover:bg-green-600";
     }
   };
 
@@ -114,35 +188,40 @@ const Profile = () => {
               className='h-40 rounded-t object-cover'
             />
             <Image
-              src={imagePreview || user.image}
-              alt={user.name}
+              src={imagePreview || user.image || "/images/default-avatar.png"}
+              alt={user.name || "User"}
               width={144}
               height={144}
               className='w-36 h-36 rounded-full absolute -bottom-10 border-2 border-[var(--color-primary)] left-2 right-0 object-cover'
             />
           </div>
           <div className='mt-12 px-4 pb-4 space-y-1'>
-            <h2 className='text-2xl sm:text-3xl font-semibold text-accent'>
-              {user.name}
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className='text-2xl sm:text-3xl font-semibold '>
+                {user.name}
+              </h2>
+              <Badge className={`${getRoleBadgeColor(user.role)} text-white`}>
+                {user.role}
+              </Badge>
+            </div>
             <div className='text-lg font-semibold flex gap-2 items-center'>
               <Mail />
               {user.email}
             </div>
             <div className='text-lg font-semibold flex gap-2 items-center'>
               <Phone />
-              {user.contact}
+              {user.contact || "Not provided"}
             </div>
             <div className='text-lg font-semibold flex gap-2 items-center'>
               <House />
-              {user.address}
+              {user.address || "Not provided"}
             </div>
             <div className='text-lg font-semibold flex gap-2 items-center'>
               <BriefcaseBusiness />
-              <p className='break-words w-full '>{user.profession}</p>
+              <p className='break-words w-full '>{user.profession || "Not specified"}</p>
             </div>
             <hr />
-            <div className='text-base'>{user.about}</div>
+            <div className='text-base'>{user.about || "No description provided."}</div>
           </div>
         </CardContent>
       </Card>
@@ -161,7 +240,7 @@ const Profile = () => {
                 Full Name
               </div>
               <div className='bg-background rounded-md py-1 px-3 break-words'>
-                {user.name}
+                {user.name || "Not set"}
               </div>
             </div>
             <div className='space-y-2'>
@@ -179,7 +258,7 @@ const Profile = () => {
                 Contact
               </div>
               <div className='bg-background rounded-md py-1 px-3 break-words'>
-                {user.contact}
+                {user.contact || "Not provided"}
               </div>
             </div>
             <div className='space-y-2'>
@@ -188,7 +267,7 @@ const Profile = () => {
                 Address
               </div>
               <div className='bg-background rounded-md py-1 px-3 break-words'>
-                {user.address}
+                {user.address || "Not provided"}
               </div>
             </div>
             <div className='space-y-2'>
@@ -197,7 +276,18 @@ const Profile = () => {
                 Profession
               </div>
               <div className='bg-background rounded-md py-1 px-3 break-words'>
-                {user.profession}
+                {user.profession || "Not specified"}
+              </div>
+            </div>
+            <div className='space-y-2'>
+              <div className='flex items-center gap-2'>
+                <ShieldCheck />
+                Role
+              </div>
+              <div className='bg-background rounded-md py-1 px-3 break-words'>
+                <Badge className={`${getRoleBadgeColor(user.role)} text-white`}>
+                  {user.role}
+                </Badge>
               </div>
             </div>
           </div>
@@ -295,6 +385,18 @@ const Profile = () => {
                       </FormItem>
                     )}
                   />
+                  <div className='space-y-2'>
+                    <div className='flex items-center gap-2'>
+                      <ShieldCheck />
+                      Role
+                    </div>
+                    <div className='bg-background rounded-md py-1 px-3 break-words'>
+                      <Badge className={`${getRoleBadgeColor(user.role)} text-white`}>
+                        {user.role}
+                      </Badge>
+                      <p className="text-xs text-gray-500 mt-1">Role cannot be changed by the user</p>
+                    </div>
+                  </div>
                 </div>
                 <FormField
                   control={form.control}
@@ -306,6 +408,7 @@ const Profile = () => {
                         <textarea
                           {...field}
                           className='block w-full border border-gray-300 text-black rounded-md py-1 pl-3 shadow-sm'
+                          rows={4}
                         />
                       </FormControl>
                       <FormMessage />
@@ -317,7 +420,7 @@ const Profile = () => {
                   control={form.control}
                   render={() => (
                     <FormItem>
-                      <FormLabel>Event Image</FormLabel>
+                      <FormLabel>Profile Image</FormLabel>
                       <FormControl>
                         <div
                           className='border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer'
@@ -330,8 +433,8 @@ const Profile = () => {
                               src={imagePreview as string}
                               width={144}
                               height={144}
-                              alt='Event Preview'
-                              className='aspect-video rounded-lg'
+                              alt='Profile Preview'
+                              className='rounded-full w-36 h-36 object-cover'
                             />
                           ) : (
                             <Upload className='h-8 w-8 text-muted-foreground mb-2' />
@@ -367,4 +470,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Profile; 

@@ -19,7 +19,7 @@ import Link from "next/link";
 import {AppSidebar} from "@/components/dashboard/app-sidebar";
 import "@/app/globals.css";
 import {Toaster} from "sonner";
-import { SessionProvider } from "next-auth/react";
+import {SessionProvider} from "next-auth/react";
 
 export default function DashboardLayout({
                                             children,
@@ -28,7 +28,6 @@ export default function DashboardLayout({
 }) {
     const [pathSegments, setPathSegments] = useState<string[]>([]); // State to store path segments
     const pathname = usePathname(); // Get current path
-
     useEffect(() => {
         setPathSegments(pathname.split("/").filter((segment) => segment)); // Update state only on client
     }, [pathname]);

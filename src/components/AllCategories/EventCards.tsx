@@ -1,77 +1,139 @@
- "use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { FaHeart } from "react-icons/fa";
+"use client"
+import Image from "next/image"
+import {Button} from "../ui/button"
+import {FaHeart} from "react-icons/fa"
+import {MapPin} from "lucide-react"
+import {SlCalender} from "react-icons/sl"
+import Link from "next/link"
+import axios from "axios";
 
-// Define the Event type
-interface Event {
-  id: number;
-  title: string;
-  image: string;
-  category: string;
-  location: string;
-  duration: string;
-  forWhom: string;
-  price: string;
-  reviews: number;
-  rating: number;
+import { loadStripe } from "@stripe/stripe-js";
+import { useState } from "react"
+// Load Stripe
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+
+export interface IEvent {
+    id: string
+    title: string
+    description: string
+    category: string
+    location: string
+    startDate: Date
+    endDate: Date
+    coverImage: string
+    totalTickets: number
+    ticketPrice: number
+    organizerId: string
+    availableTickets: number | null
+    createdAt: Date
+    updatedAt: Date
 }
 
-// Define the props interface
 interface EventCardsProps {
-  events: Event[]; // Expecting an array of events from `page.tsx`
+    events: IEvent[]
 }
 
-export default function EventCards({ events = [] }: EventCardsProps) {
-  const router = useRouter();
-
-  // Handler function for redirecting to event details page
-  const handleDetails = (id: number) => {
-    router.push(`/categories/${id}`);  
-    console.log(id);
-  };
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-      {events.length > 0 ? (
-        events.map((event) => (
-          <div
-            key={event.id}
-            className="border rounded-xl p-4 shadow-lg transition-transform hover:scale-105 duration-300"
-          >
-            <div className="relative">
-              <Image
-                src={event.image}
-                alt={event.title}
-                width={400}
-                height={250}
-                className="rounded-lg w-full h-48 object-cover"
-              />
-              <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition duration-200">
-                <FaHeart className="text-red-500" />
-              </button>
-            </div>
-            <div className="mt-4 text-center">
-              <p className="text-gray-500 text-sm">
-                {event.reviews} reviews ★ {event.rating}
-              </p>
-              <h3 className="font-semibold text-lg">{event.title}</h3>
-              <p className="text-gray-500 text-sm">{event.category} • {event.location}</p>
-              <p className="text-gray-500 text-sm">{event.duration} • {event.forWhom}</p>
-              <p className="text-xl font-bold mt-1 text-primary">{event.price}</p>
-              <Button 
-                onClick={() => handleDetails(event.id)} 
-                className="bg-[#902B27] text-white w-full mt-4 py-2 rounded-lg"
-              >
-                Book Now
-              </Button>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-center text-gray-500">No events found.</p>
-      )}
-    </div>
-  );
+const formatDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    })
 }
+
+export default function EventCards({events = []}: EventCardsProps) {
+    const [loading, setLoading] = useState(false);
+      const checkoutButton = async (event:IEvent) => {
+    
+        setLoading(true);
+        try {
+          const { data } = await axios.post("/api/payment", {
+            title: event.title,
+            description:event.description,
+            price: event.ticketPrice.toString(),
+          });
+    
+          const stripe = await stripePromise;
+          await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+        } catch (error) {
+          console.error("Payment error:", error);
+          alert("Failed to initiate payment. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-6">
+            {events.length > 0 ? (
+                events.map((event) => (
+                    <div
+                        key={event.id}
+                        className="border rounded-xl p-3 md:p-4 shadow-lg transition-transform hover:scale-105 duration-300 flex flex-col"
+                    >
+                        <div className="relative">
+                            <Image
+                                src={process.env.NEXT_PUBLIC_URL_ENDPOINT + event.coverImage || "/placeholder.svg"}
+                                alt={event.title}
+                                width={400}
+                                height={250}
+                                className="rounded-lg w-full h-40 sm:h-48 object-cover"
+                            />
+                            <button
+                                className="absolute top-2 right-2 bg-white p-1.5 md:p-2 rounded-full shadow-md hover:scale-110 transition duration-200">
+                                <FaHeart className="text-red-500 text-sm md:text-base"/>
+                            </button>
+                        </div>
+                        <div className="mt-3 flex-1 flex flex-col">
+                            <h3 className="font-semibold text-base md:text-lg text-center line-clamp-1"
+                                title={event.title}>
+                                {event.title}
+                            </h3>
+                            <p className="text-gray-500 text-xs md:text-sm capitalize text-center mb-2">{event.category}</p>
+                            <div className="mt-1 space-y-1.5 flex-1">
+                                <div className="text-gray-500 text-xs md:text-sm flex items-start gap-1.5">
+                                    <MapPin size={14} className="flex-shrink-0 mt-0.5"/>
+                                    <span className="line-clamp-1" title={event.location}>
+                    {event.location}
+                  </span>
+                                </div>
+                                <div className="text-gray-500 text-xs md:text-sm">
+                                    <div className="flex items-start gap-1.5 mb-1">
+                                        <SlCalender className="flex-shrink-0 mt-0.5" size={14}/>
+                                        <span className="line-clamp-1" title={formatDate(event.startDate)}>
+                      {formatDate(event.startDate)}
+                    </span>
+                                    </div>
+                                    <div className="flex items-start gap-1.5 pl-5">
+                    <span className="line-clamp-1" title={formatDate(event.endDate)}>
+                      {formatDate(event.endDate)}
+                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p className="text-lg md:text-xl font-bold mt-2 text-center text-primary">${event.ticketPrice}</p>
+                            <div className="grid grid-cols-4 gap-2 mt-3">
+                                <Button onClick={()=>checkoutButton(event)} disabled={loading}
+                                    className="bg-[#902B27] hover:bg-[#7a2522] text-white py-1.5 px-2 h-auto text-xs md:text-sm rounded-lg col-span-3 cursor-pointer">
+                                     Book Now 
+                                </Button>
+                                <Button
+                                    asChild
+                                    className="py-1.5 px-2 h-auto text-xs md:text-sm rounded-lg cursor-pointer"
+                                    variant="outline"
+                                >
+                                    <Link href={`events/${event.id}`}>Details</Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <p className="text-center text-gray-500 col-span-full">No events found.</p>
+            )}
+        </div>
+    )
+}
+

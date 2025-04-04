@@ -15,6 +15,13 @@ enum UserRole {
   ORGANIZER
 }
 
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -27,6 +34,7 @@ model User {
 
   organizedEvents Event[]   @relation("EventOrganizer")
   bookings        Booking[]
+  payments        Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,13 +51,43 @@ model Booking {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id])
 
-  numberOfTickets Int
-  totalPrice      Decimal @db.Decimal(10, 2)
+  payment Payment?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("bookings")
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  stripeSessionId       String        @unique
+  stripePaymentIntentId String?
+  amount                Int
+  currency              String        @default("usd")
+  status                PaymentStatus
+  paymentMethod         String?
+
+  userId        String?
+  user          User?   @relation(fields: [userId], references: [id])
+  customerEmail String
+  customerName  String?
+
+  eventId     String
+  event       Event  @relation(fields: [eventId], references: [id])
+  eventTitle  String
+  ticketPrice Int
+
+  bookingId String?  @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+
+  paymentDate  DateTime @default(now())
+  errorMessage String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
 }
 
 model Event {
@@ -71,6 +109,7 @@ model Event {
   organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id])
 
   bookings Booking[]
+  payments Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

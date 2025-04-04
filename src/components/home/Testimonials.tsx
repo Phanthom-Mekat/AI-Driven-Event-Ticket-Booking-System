@@ -18,7 +18,7 @@ export default function Testimonials() {
         },
         {
             quote:
-                "I love how I can discover local events across different categories. The personalized recommendations have introduced me to amazing experiences I would have never found otherwise.",
+                "I love how I can discover local events across different events. The personalized recommendations have introduced me to amazing experiences I would have never found otherwise.",
             name: "Emily Watson",
             designation: "Community Event Coordinator",
             src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
