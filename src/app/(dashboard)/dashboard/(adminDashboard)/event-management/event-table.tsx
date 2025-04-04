@@ -86,6 +86,7 @@ export const EventManagementTable = ({
     setIsEditModalOpen(true);
   };
 
+
   const handleDeleteEvent = (event: IEvent) => {
     setSelectedEvent(event);
     setIsDeleteModalOpen(true);

@@ -9,6 +9,7 @@ import Footer from "@/components/home/Footer";
 import ChatBot from "@/components/chat-bot";
 
 
+
 export default function Home() {
     return (
         <>
@@ -24,5 +25,6 @@ export default function Home() {
             </div>
             <Footer/>
         </>
+
     );
 }
