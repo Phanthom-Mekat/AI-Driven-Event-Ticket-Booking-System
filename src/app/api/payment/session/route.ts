@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "Session ID is required" }, { status: 400 })
         }
 
-        console.log("Fetching Stripe session:", sessionId)
 
         // Get the current user session
         const userSession = await auth()
@@ -25,18 +24,11 @@ export async function GET(request: NextRequest) {
                 expand: ["line_items", "customer", "payment_intent"],
             })
 
-            console.log("Stripe session retrieved:", session.id)
-            console.log("Session metadata:", session.metadata)
-            console.log("Session customer details:", session.customer_details)
-
-            // Check if the user is authorized to view this session
-            // Only check if we have a logged-in user and the session has customer email
             if (userSession?.user?.email && session.customer_email && userSession.user.email !== session.customer_email) {
                 console.log("Unauthorized access attempt")
                 return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
             }
 
-            // Extract relevant data from the session
             const lineItems = session.line_items?.data || []
             const eventTitle =
                 lineItems.length > 0

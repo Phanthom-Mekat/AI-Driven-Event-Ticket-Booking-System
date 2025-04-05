@@ -25,7 +25,6 @@ export const POST = async (request: NextRequest) => {
             return NextResponse.json({ error: "Event not found" }, { status: 404 })
         }
 
-        // Update the success URL to point to our new success page
         const stripeSession = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [
@@ -41,6 +40,7 @@ export const POST = async (request: NextRequest) => {
                     quantity: 1,
                 },
             ],
+
             mode: "payment",
             customer_email: email,
             success_url: `${process.env.NEXT_PUBLIC_APP_URL}/events/success?session_id={CHECKOUT_SESSION_ID}`,

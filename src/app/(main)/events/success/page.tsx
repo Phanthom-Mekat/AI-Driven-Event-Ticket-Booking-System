@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import axios from "axios"
 
+
 interface PaymentDetails {
     id: string
     eventTitle: string

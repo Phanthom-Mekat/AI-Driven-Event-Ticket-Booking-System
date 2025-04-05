@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
         const signature = (await headers()).get("stripe-signature") as string
 
         console.log("Received webhook request with signature:", signature ? "✓" : "✗")
-        console.log("Webhook request body length:", body.length)
 
         let event: Stripe.Event
         try {
