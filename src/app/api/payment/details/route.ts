@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
     try {
@@ -21,6 +21,12 @@ export async function GET(request: NextRequest) {
         // Find the payment by Stripe session ID
         try {
             console.log("Querying database for payment with sessionId:", sessionId)
+            const allPayments = await prisma.payment.findMany({
+                select: { id: true, stripeSessionId: true, status: true },
+                take: 5,
+            })
+            console.log("Recent payments in database:", allPayments)
+
             const payment = await prisma.payment.findUnique({
                 where: {
                     stripeSessionId: sessionId,

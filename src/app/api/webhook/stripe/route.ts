@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { headers } from "next/headers"
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string
@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
         const signature = (await headers()).get("stripe-signature") as string
 
         console.log("Received webhook request with signature:", signature ? "✓" : "✗")
+        console.log("Webhook request body length:", body.length)
 
         let event: Stripe.Event
         try {
@@ -19,6 +20,7 @@ export async function POST(request: NextRequest) {
             console.log(`Webhook event verified: ${event.type} (${event.id})`)
         } catch (err) {
             console.error(`Webhook signature verification failed: ${err instanceof Error ? err.message : "Unknown error"}`)
+            console.error("Webhook secret used:", webhookSecret ? `${webhookSecret.substring(0, 4)}...` : "missing")
             return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
         }
 
@@ -42,6 +44,7 @@ export async function POST(request: NextRequest) {
     }
 }
 
+// Update the handleSuccessfulPayment function to add more detailed logging and error handling
 async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
     console.log("Processing successful payment for session:", session.id)
 
@@ -81,6 +84,17 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
     try {
         // Use a transaction to ensure both payment and booking are created together
         console.log("Starting database transaction")
+
+        // First check if a payment record already exists for this session
+        const existingPayment = await prisma.payment.findUnique({
+            where: { stripeSessionId: session.id },
+        })
+
+        if (existingPayment) {
+            console.log("Payment record already exists for session:", session.id)
+            return
+        }
+
         await prisma.$transaction(async (tx) => {
             console.log("Creating booking for user:", userId, "event:", eventId)
 

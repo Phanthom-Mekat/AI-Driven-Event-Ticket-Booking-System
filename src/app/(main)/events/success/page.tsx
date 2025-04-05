@@ -31,6 +31,7 @@ export default function PaymentSuccessPage() {
 
     const sessionId = searchParams.get("session_id")
 
+    // Update the useEffect hook to add more detailed error handling and logging
     useEffect(() => {
         // If no session_id is provided, redirect to events page
         if (!sessionId) {
@@ -45,6 +46,7 @@ export default function PaymentSuccessPage() {
                 const response = await axios.get(`/api/payment/session?sessionId=${sessionId}`)
 
                 if (response.data) {
+                    console.log("Successfully retrieved Stripe session data:", response.data)
                     // Use the data from Stripe directly
                     const data = response.data
                     setPaymentDetails({
@@ -62,8 +64,8 @@ export default function PaymentSuccessPage() {
                 }
             } catch (err) {
                 console.error("Error fetching from Stripe:", err)
-                // Fall back to database check
-                fetchPaymentDetails()
+                setError("We couldn't load your payment details, but your payment was successful.")
+                setLoading(false)
             }
         }
 
@@ -101,12 +103,6 @@ export default function PaymentSuccessPage() {
                 } else {
                     // If we've exhausted retries, try to get basic info from Stripe
                     getStripeSession()
-
-                    // If all else fails, show a generic success message
-                    if (retryCount >= 3) {
-                        setError("We couldn't load your complete payment details, but your payment was successful.")
-                        setLoading(false)
-                    }
                 }
             }
         }
