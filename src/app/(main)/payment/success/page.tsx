@@ -1,11 +1,11 @@
 "use client"
 
-import {useEffect, useState} from "react"
-import {useSearchParams, useRouter} from "next/navigation"
-import {Button} from "@/components/ui/button"
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card"
-import {CheckCircle2} from "lucide-react"
-import {Skeleton} from "@/components/ui/skeleton"
+import { useEffect, useState } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { CheckCircle2 } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 
 interface PaymentDetails {
@@ -26,11 +26,12 @@ export default function PaymentSuccessPage() {
     const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [retryCount, setRetryCount] = useState(0)
 
     const sessionId = searchParams.get("session_id")
-    console.log(sessionId)
 
     useEffect(() => {
+        // If no session_id is provided, redirect to events page
         if (!sessionId) {
             router.push("/events")
             return
@@ -38,24 +39,45 @@ export default function PaymentSuccessPage() {
 
         async function fetchPaymentDetails() {
             try {
+                console.log("Fetching payment details for session:", sessionId)
                 const response = await fetch(`/api/payment/details?sessionId=${sessionId}`)
 
                 if (!response.ok) {
-                    throw new Error("Failed to fetch payment details")
+                    const errorData = await response.json().catch(() => ({}))
+                    console.error("Error response:", response.status, errorData)
+
+                    // If we get a 404 and haven't retried too many times, we'll retry
+                    // This helps when the webhook hasn't processed yet
+                    if (response.status === 404 && retryCount < 3) {
+                        throw new Error("Payment details not found yet, retrying...")
+                    }
+
+                    throw new Error(`Failed to fetch payment details: ${response.status}`)
                 }
 
                 const data = await response.json()
+                console.log("Payment details received:", data)
                 setPaymentDetails(data)
+                setLoading(false)
             } catch (err) {
                 console.error("Error fetching payment details:", err)
-                setError("We couldn't load your payment details. Please check your email for confirmation.")
-            } finally {
-                setLoading(false)
+
+                // If we're still within retry limits, try again after a delay
+                if (retryCount < 3) {
+                    console.log(`Retrying (${retryCount + 1}/3) in 2 seconds...`)
+                    setRetryCount((prev) => prev + 1)
+                    setTimeout(() => {
+                        fetchPaymentDetails()
+                    }, 2000) // Retry after 2 seconds
+                } else {
+                    setError("We couldn't load your payment details. Please check your email for confirmation.")
+                    setLoading(false)
+                }
             }
         }
 
         fetchPaymentDetails()
-    }, [sessionId, router])
+    }, [sessionId, router, retryCount])
 
     // Format currency
     const formatCurrency = (amount: number, currency: string) => {
@@ -70,7 +92,7 @@ export default function PaymentSuccessPage() {
             <Card className="w-full">
                 <CardHeader className="text-center">
                     <div className="flex justify-center mb-4">
-                        <CheckCircle2 className="h-16 w-16 text-green-500"/>
+                        <CheckCircle2 className="h-16 w-16 text-green-500" />
                     </div>
                     <CardTitle className="text-2xl md:text-3xl">Payment Successful!</CardTitle>
                     <CardDescription className="text-base md:text-lg">
@@ -81,15 +103,16 @@ export default function PaymentSuccessPage() {
                 <CardContent>
                     {loading ? (
                         <div className="space-y-4">
-                            <Skeleton className="h-6 w-full"/>
-                            <Skeleton className="h-6 w-3/4"/>
-                            <Skeleton className="h-6 w-1/2"/>
-                            <Skeleton className="h-6 w-2/3"/>
+                            <Skeleton className="h-6 w-full" />
+                            <Skeleton className="h-6 w-3/4" />
+                            <Skeleton className="h-6 w-1/2" />
+                            <Skeleton className="h-6 w-2/3" />
                         </div>
                     ) : error ? (
                         <div className="text-center py-4">
                             <p className="text-red-500">{error}</p>
-                            <p className="mt-2">A confirmation has been sent to your email.</p>
+                            <p className="mt-2">Your payment was successful and a confirmation has been sent to your email.</p>
+                            <p className="mt-1">Session ID: {sessionId}</p>
                         </div>
                     ) : paymentDetails ? (
                         <div className="space-y-6">
@@ -135,13 +158,13 @@ export default function PaymentSuccessPage() {
                             <div className="bg-green-50 p-4 rounded-lg">
                                 <h3 className="font-medium text-green-800">Payment Information</h3>
                                 <p className="text-green-700">Payment ID: {paymentDetails.id.substring(0, 8)}...</p>
-                                <p className="text-green-700">Payment
-                                    Date: {new Date(paymentDetails.paymentDate).toLocaleString()}</p>
+                                <p className="text-green-700">Payment Date: {new Date(paymentDetails.paymentDate).toLocaleString()}</p>
                             </div>
                         </div>
                     ) : (
                         <div className="text-center py-4">
                             <p>No payment details found. Please check your email for confirmation.</p>
+                            <p className="mt-1">Session ID: {sessionId}</p>
                         </div>
                     )}
                 </CardContent>
@@ -151,7 +174,7 @@ export default function PaymentSuccessPage() {
                         <Link href="/events">Browse More Events</Link>
                     </Button>
                     <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                        <Link href={"/dashboard/my-ticket"}>View Tickets</Link>
+                        <Link href="/dashboard/payments">View My Tickets</Link>
                     </Button>
                 </CardFooter>
             </Card>
