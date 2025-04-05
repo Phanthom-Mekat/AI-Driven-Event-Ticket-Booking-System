@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎟️ TicketHub - AI-Driven Event Ticket Booking System
 
-## Getting Started
+TicketHub is a modern AI-powered event ticket booking platform offering personalized recommendations, dynamic pricing, fraud prevention, and an all-in-one dashboard for users, organizers, and administrators.
 
-First, run the development server:
+![TicketHub Banner](https://i.postimg.cc/7LR5rSpp/image.png)
+
+---
+
+## 🌐 Live Demo
+
+- **Frontend**: [Live Demo](https://ai-driven-event-ticket-booking-system.vercel.app/)
+- **Backend API**: Integrated into frontend via Next.js API routes
+
+---
+
+## 🔐 Admin Access
+
+> **Email**: 
+> **Password**: 
+
+---
+
+## 🚀 Key Features
+
+- ✅ **AI-Based Event Recommendations**
+- ✅ **Dynamic Ticket Pricing Based on Demand**
+- ✅ **Secure Booking with Stripe + PDF/QR Tickets**
+- ✅ **Admin & Organizer Dashboards**
+- ✅ **AI Chatbot for 24/7 Support**
+- ✅ **Fraud & Duplicate Booking Detection**
+- ✅ **Fully Responsive & Accessible UI**
+- ✅ **Wishlist, Reviews, Notifications, Referral System**
+- ✅ **Dark Mode Toggle & Multi-language (Optional)**
+
+---
+
+## 💻 Tech Stack
+
+### Frontend & Backend (Monorepo - Next.js)
+
+- **Framework**: Next.js (TypeScript)
+- **Styling**: Tailwind CSS
+- **State Management**: React Query, Context API
+- **Forms**: React Hook Form
+- **Authentication**: NextAuth.js + JWT
+- **Database**: PostgreSQL (via Prisma)
+- **AI Integration**: Gemini API
+- **Payments**: Stripe
+- **Email Service**: SendGrid
+- **QR/PDF Generation**: PDFKit + QR Code
+- **Maps Integration**: Google Maps API
+
+---
+
+## 📱 Screenshots
+
+### Home Page
+
+
+### Event Listings
+
+
+### Admin Dashboard
+
+
+### Booking Process
+
+
+---
+
+## 🛠️ Installation & Setup
+
+### 📦 Prerequisites
+
+- Node.js (v16+)
+- PostgreSQL
+- Stripe Account
+- OpenAI API Key
+
+---
+
+### 🚀 Local Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Clone the repository
+git clone https://github.com/yourusername/tickethub.git
+cd tickethub
