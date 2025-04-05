@@ -21,9 +21,8 @@ export async function GET(request: NextRequest) {
         console.log("User authenticated:", !!userSession?.user)
 
         try {
-            // Retrieve the session directly from Stripe
             const session = await stripe.checkout.sessions.retrieve(sessionId, {
-                expand: ["line_items", "customer"],
+                expand: ["line_items", "customer", "payment_intent"],
             })
 
             console.log("Stripe session retrieved:", session.id)
@@ -44,7 +43,14 @@ export async function GET(request: NextRequest) {
                     ? lineItems[0].description || session.metadata?.eventTitle || "Event"
                     : session.metadata?.eventTitle || "Event"
 
-            // Return the session details
+            // Get payment method details if available
+            let paymentMethodDetails = "Card"
+            if (typeof session.payment_intent === "object" && session.payment_intent) {
+                const paymentIntent = session.payment_intent
+                paymentMethodDetails = paymentIntent.payment_method_types?.[0] || "Card"
+            }
+
+            // Return the session details with enhanced information
             return NextResponse.json({
                 id: session.id,
                 eventTitle: eventTitle,
@@ -55,6 +61,8 @@ export async function GET(request: NextRequest) {
                 created: session.created,
                 eventDate: session.metadata?.eventDate || new Date().toISOString(),
                 eventLocation: session.metadata?.eventLocation || "Venue",
+                paymentMethod: paymentMethodDetails,
+                status: session.payment_status || "paid",
             })
         } catch (stripeError) {
             console.error("Error retrieving Stripe session:", stripeError)

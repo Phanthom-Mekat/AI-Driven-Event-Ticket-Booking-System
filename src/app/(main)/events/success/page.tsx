@@ -27,11 +27,10 @@ export default function PaymentSuccessPage() {
     const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const [retryCount, setRetryCount] = useState(0)
 
     const sessionId = searchParams.get("session_id")
 
-    // Update the useEffect hook to add more detailed error handling and logging
+    // Replace the entire useEffect hook with this simplified version that only uses the session route
     useEffect(() => {
         // If no session_id is provided, redirect to events page
         if (!sessionId) {
@@ -39,15 +38,14 @@ export default function PaymentSuccessPage() {
             return
         }
 
-        // Try to get payment details directly from Stripe
-        const getStripeSession = async () => {
+        async function fetchSessionDetails() {
             try {
-                console.log("Fetching session details from Stripe API")
+                setLoading(true)
+                console.log("Fetching session details for session:", sessionId)
                 const response = await axios.get(`/api/payment/session?sessionId=${sessionId}`)
 
                 if (response.data) {
                     console.log("Successfully retrieved Stripe session data:", response.data)
-                    // Use the data from Stripe directly
                     const data = response.data
                     setPaymentDetails({
                         id: data.id || sessionId,
@@ -60,56 +58,17 @@ export default function PaymentSuccessPage() {
                         eventDate: data.eventDate || new Date().toISOString(),
                         eventLocation: data.eventLocation || "Venue",
                     })
-                    setLoading(false)
                 }
+                setLoading(false)
             } catch (err) {
-                console.error("Error fetching from Stripe:", err)
+                console.error("Error fetching session details:", err)
                 setError("We couldn't load your payment details, but your payment was successful.")
                 setLoading(false)
             }
         }
 
-        const fetchPaymentDetails = async () => {
-            try {
-                console.log(`Fetching payment details for session: ${sessionId} (Attempt ${retryCount + 1}/3)`)
-                const response = await fetch(`/api/payment/details?sessionId=${sessionId}`)
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}))
-                    console.error("Error response:", response.status, errorData)
-
-                    // If we get a 404 and haven't retried too many times, we'll retry
-                    if (response.status === 404 && retryCount < 2) {
-                        throw new Error("Payment details not found yet, retrying...")
-                    }
-
-                    throw new Error(`Failed to fetch payment details: ${response.status}`)
-                }
-
-                const data = await response.json()
-                console.log("Payment details received:", data)
-                setPaymentDetails(data)
-                setLoading(false)
-            } catch (err) {
-                console.error("Error fetching payment details:", err)
-
-                // If we're still within retry limits, try again after a delay
-                if (retryCount < 2) {
-                    console.log(`Retrying (${retryCount + 1}/3) in 3 seconds...`)
-                    setRetryCount((prev) => prev + 1)
-                    setTimeout(() => {
-                        fetchPaymentDetails()
-                    }, 3000) // Retry after 3 seconds
-                } else {
-                    // If we've exhausted retries, try to get basic info from Stripe
-                    getStripeSession()
-                }
-            }
-        }
-
-        // Start with trying to get details from our database
-        fetchPaymentDetails()
-    }, [sessionId, router, retryCount])
+        fetchSessionDetails()
+    }, [sessionId, router])
 
     // Format currency
     const formatCurrency = (amount: number, currency: string) => {
@@ -246,7 +205,7 @@ export default function PaymentSuccessPage() {
                         <Link href="/events">Browse More Events</Link>
                     </Button>
                     <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                        <Link href="/dashboard/payments">View My Tickets</Link>
+                        <Link href={"/dashboard/my-ticket"}>View My Tickets</Link>
                     </Button>
                 </CardFooter>
             </Card>
