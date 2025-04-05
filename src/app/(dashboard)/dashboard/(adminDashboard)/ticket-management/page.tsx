@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import prisma from "@/lib/prisma";
 import BookingList from "@/app/(dashboard)/dashboard/(adminDashboard)/ticket-management/booking-table";
 
@@ -8,8 +10,6 @@ export default async function BookingListPage( ){
             user: true
         }
     });
-    console.log(bookings)
-
     return (
         <>
             <div className="container py-10">
