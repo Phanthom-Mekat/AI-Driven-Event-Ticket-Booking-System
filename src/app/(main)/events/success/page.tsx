@@ -126,6 +126,7 @@ export default function PaymentSuccessPage() {
                                         <CreditCard size={18} />
                                     </div>
                                     <div>
+
                                         <h3 className="font-medium text-gray-500">Amount Paid</h3>
                                         <p className="font-semibold text-lg">
                                             {formatCurrency(paymentDetails.amount, paymentDetails.currency)}
