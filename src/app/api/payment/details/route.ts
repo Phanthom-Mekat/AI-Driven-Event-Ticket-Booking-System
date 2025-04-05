@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
 
         // Find the payment by Stripe session ID
         try {
+            console.log("Querying database for payment with sessionId:", sessionId)
             const payment = await prisma.payment.findUnique({
                 where: {
                     stripeSessionId: sessionId,
@@ -43,9 +44,11 @@ export async function GET(request: NextRequest) {
             }
 
             if (payment.userId && session?.user?.id && payment.userId !== session.user.id) {
+                console.log("Unauthorized access attempt. Payment user:", payment.userId, "Session user:", session.user.id)
                 return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
             }
 
+            console.log("Returning payment details for session:", sessionId)
             return NextResponse.json({
                 id: payment.id,
                 eventTitle: payment.eventTitle || payment.event.title,
