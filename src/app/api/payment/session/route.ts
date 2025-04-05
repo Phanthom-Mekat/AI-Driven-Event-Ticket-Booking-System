@@ -1,0 +1,63 @@
+import { type NextRequest, NextResponse } from "next/server"
+import Stripe from "stripe"
+import { auth } from "@/auth"
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
+
+export async function GET(request: NextRequest) {
+    try {
+        // Get the session ID from the query parameters
+        const { searchParams } = new URL(request.url)
+        const sessionId = searchParams.get("sessionId")
+
+        if (!sessionId) {
+            return NextResponse.json({ error: "Session ID is required" }, { status: 400 })
+        }
+
+        console.log("Fetching Stripe session:", sessionId)
+
+        // Get the current user session
+        const userSession = await auth()
+
+        // Retrieve the session directly from Stripe
+        const session = await stripe.checkout.sessions.retrieve(sessionId, {
+            expand: ["line_items", "customer"],
+        })
+
+        console.log("Stripe session retrieved:", session.id)
+
+        // Check if the user is authorized to view this session
+        // Only check if we have a logged-in user and the session has customer email
+        if (userSession?.user?.email && session.customer_email && userSession.user.email !== session.customer_email) {
+            console.log("Unauthorized access attempt")
+            return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+        }
+
+        // Extract relevant data from the session
+        const lineItems = session.line_items?.data || []
+        const eventTitle =
+            lineItems.length > 0
+                ? lineItems[0].description || session.metadata?.eventTitle || "Event"
+                : session.metadata?.eventTitle || "Event"
+
+        // Return the session details
+        return NextResponse.json({
+            id: session.id,
+            eventTitle: eventTitle,
+            amount: session.amount_total ? session.amount_total / 100 : 0,
+            currency: session.currency || "usd",
+            customerName: session.customer_details?.name || session.metadata?.userName || "",
+            customerEmail: session.customer_email || session.customer_details?.email || session.metadata?.userEmail || "",
+            created: session.created,
+            eventDate: session.metadata?.eventDate || new Date().toISOString(),
+            eventLocation: session.metadata?.eventLocation || "Venue",
+        })
+    } catch (error) {
+        console.error("Error fetching Stripe session:", error)
+        return NextResponse.json(
+            { error: "Failed to fetch session details", details: error instanceof Error ? error.message : String(error) },
+            { status: 500 },
+        )
+    }
+}
+
