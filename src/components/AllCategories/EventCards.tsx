@@ -86,6 +86,7 @@ export default function EventCards({events = []}: EventCardsProps) {
                                     </div>
                                 </div>
                             </div>
+
                             <p className="text-lg md:text-xl font-bold mt-2 text-center text-primary">${event.ticketPrice}</p>
                                 <Button asChild
                                     className="bg-[#902B27] hover:bg-[#7a2522] mt-2 text-white py-1.5 px-2 h-auto text-xs md:text-sm rounded-lg col-span-3 cursor-pointer">
