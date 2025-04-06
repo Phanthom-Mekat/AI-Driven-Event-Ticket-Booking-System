@@ -8,7 +8,7 @@ TicketHub is a modern AI-powered event ticket booking platform offering personal
 
 ## 🌐 Live Demo
 
-- **Frontend**: [Live Demo](https://ai-driven-event-ticket-booking-system.vercel.app/)
+- **Frontend**: [Live Demo](https://bookhub-test.vercel.app/)
 - **Backend API**: Integrated into frontend via Next.js API routes
 
 ---
