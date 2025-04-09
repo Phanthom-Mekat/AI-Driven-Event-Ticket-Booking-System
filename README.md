@@ -16,7 +16,8 @@ TicketHub is a modern AI-powered event ticket booking platform offering personal
 ## 🔐 Admin Access
 
 > **Email**: 
-> **Password**: 
+> **Password**:
+mail for admin access
 
 ---
 
